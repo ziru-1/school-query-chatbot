@@ -1,11 +1,9 @@
-import axios from 'axios';
+import { Pinecone } from '@pinecone-database/pinecone';
 import dotenv from 'dotenv';
 dotenv.config();
 
-export const pineconeInstance = axios.create({
-  baseURL: process.env.PINECONE_INDEX_URL,
-  headers: {
-    'Api-Key': process.env.PINECONE_API_KEY,
-    'Content-Type': 'application/json',
-  },
+const client = new Pinecone({
+  apiKey: process.env.PINECONE_API_KEY
 });
+
+export const pineconeIndex = client.index(process.env.PINECONE_INDEX_NAME);

@@ -1,11 +1,7 @@
-import axios from 'axios';
+import { CohereClient } from 'cohere-ai';
 import dotenv from 'dotenv';
 dotenv.config();
 
-export const cohereInstance = axios.create({
-  baseURL: 'https://api.cohere.ai',
-  headers: {
-    Authorization: `Bearer ${process.env.COHERE_API_KEY}`,
-    'Content-Type': 'application/json',
-  },
+export const cohere = new CohereClient({
+  apiKey: process.env.COHERE_API_KEY
 });
