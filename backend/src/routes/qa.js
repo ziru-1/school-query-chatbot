@@ -2,17 +2,22 @@ import express from 'express'
 import { cohere } from '../config/cohere.js'
 import { pineconeIndex } from '../config/pinecone.js'
 import { supabase } from '../config/supabase.js'
+import { cleanText } from '../utils/cleanText.js'
 
 const router = express.Router()
 
 // Create or update a QA pair
 router.post('/', async (req, res) => {
   try {
-    const { question, answer } = req.body
+    const rawQuestion = req.body.question
+    const rawAnswer = req.body.answer
 
-    if (!question || !answer) {
+    if (!rawQuestion || !rawAnswer) {
       return res.status(400).json({ error: 'Question and answer are required' })
     }
+
+    const question = cleanText(rawQuestion)
+    const answer = cleanText(rawAnswer)
 
     // 1. Embed with Cohere v2
     const embedRes = await cohere.v2.embed({
@@ -64,11 +69,15 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const vectorId = req.params.id
-    const { question, answer } = req.body
+    const rawQuestion = req.body.question
+    const rawAnswer = req.body.answer
 
-    if (!question || !answer) {
+    if (!rawQuestion || !rawAnswer) {
       return res.status(400).json({ error: 'Question and answer are required' })
     }
+
+    const question = cleanText(rawQuestion)
+    const answer = cleanText(rawAnswer)
 
     // 1. Embed using Cohere v2
     const embedRes = await cohere.v2.embed({
@@ -116,9 +125,7 @@ router.put('/:id', async (req, res) => {
 // Fetch all QA pairs
 router.get('/', async (req, res) => {
   try {
-    const { data, error } = await supabase
-      .from('qa_pairs')
-      .select('*')
+    const { data, error } = await supabase.from('qa_pairs').select('*')
 
     if (error) {
       return res.status(500).json({ error: error.message })
