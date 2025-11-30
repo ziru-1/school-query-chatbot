@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
     // 1. Embed with Cohere v2
     const embedRes = await cohere.v2.embed({
       texts: [question],
-      model: 'embed-english-light-v3.0',
+      model: 'embed-english-v3.0',
       inputType: 'search_document',
       embeddingTypes: ['float'],
     })
@@ -82,7 +82,7 @@ router.put('/:id', async (req, res) => {
     // 1. Embed using Cohere v2
     const embedRes = await cohere.v2.embed({
       texts: [question],
-      model: 'embed-english-light-v3.0',
+      model: 'embed-english-v3.0',
       inputType: 'search_document',
       embeddingTypes: ['float'],
     })

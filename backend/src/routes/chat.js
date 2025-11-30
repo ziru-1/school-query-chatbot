@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
     // 1. Create embedding using Cohere v2
     const embedRes = await cohere.v2.embed({
       texts: [message],
-      model: 'embed-english-light-v3.0',
+      model: 'embed-english-v3.0',
       inputType: 'search_query',
       embeddingTypes: ['float'],
     })
