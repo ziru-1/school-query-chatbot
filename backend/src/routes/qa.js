@@ -1,8 +1,8 @@
 import express from 'express'
-import { cohere } from '../config/cohere.js'
 import { pineconeIndex } from '../config/pinecone.js'
 import { supabase } from '../config/supabase.js'
 import { cleanText } from '../utils/cleanText.js'
+import { embed } from '../utils/embed.js'
 
 const router = express.Router()
 
@@ -20,14 +20,7 @@ router.post('/', async (req, res) => {
     const answer = cleanText(rawAnswer)
 
     // 1. Embed with Cohere v2
-    const embedRes = await cohere.v2.embed({
-      texts: [question],
-      model: 'embed-english-v3.0',
-      inputType: 'search_document',
-      embeddingTypes: ['float'],
-    })
-
-    const embedding = embedRes.embeddings.float[0]
+    const embedding = await embed(question, 'search_document')
 
     // 2. Create vector ID
     const vectorId = crypto.randomUUID()
@@ -80,14 +73,7 @@ router.put('/:id', async (req, res) => {
     const answer = cleanText(rawAnswer)
 
     // 1. Embed using Cohere v2
-    const embedRes = await cohere.v2.embed({
-      texts: [question],
-      model: 'embed-english-v3.0',
-      inputType: 'search_document',
-      embeddingTypes: ['float'],
-    })
-
-    const embedding = embedRes.embeddings.float[0]
+    const embedding = await embed(question, 'search_document')
 
     // 2. Pinecone + Supabase in parallel
     const pineconePromise = pineconeIndex.upsert([

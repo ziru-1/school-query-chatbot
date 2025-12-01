@@ -3,6 +3,7 @@ import { cohere } from '../config/cohere.js'
 import { pineconeIndex } from '../config/pinecone.js'
 import { supabase } from '../config/supabase.js'
 import { cleanText } from '../utils/cleanText.js'
+import { embed } from '../utils/embed.js'
 
 const router = express.Router()
 
@@ -17,14 +18,7 @@ router.post('/', async (req, res) => {
     const message = cleanText(rawMessage)
 
     // 1. Create embedding using Cohere v2
-    const embedRes = await cohere.v2.embed({
-      texts: [message],
-      model: 'embed-english-v3.0',
-      inputType: 'search_query',
-      embeddingTypes: ['float'],
-    })
-
-    const embedding = embedRes.embeddings.float[0]
+    const embedding = await embed(message, 'search_query')
 
     // 2. Query Pinecone
     const queryRes = await pineconeIndex.query({
