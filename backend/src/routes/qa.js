@@ -3,11 +3,12 @@ import { pineconeIndex } from '../config/pinecone.js'
 import { supabase } from '../config/supabase.js'
 import { cleanText } from '../utils/cleanText.js'
 import { embed } from '../utils/embed.js'
+import { verifyAdmin } from '../middleware/auth.js'
 
 const router = express.Router()
 
 // Create or update a QA pair
-router.post('/', async (req, res) => {
+router.post('/', verifyAdmin, async (req, res) => {
   try {
     const rawQuestion = req.body.question
     const rawAnswer = req.body.answer
@@ -59,7 +60,7 @@ router.post('/', async (req, res) => {
 })
 
 // Update an existing QA pair
-router.put('/:id', async (req, res) => {
+router.put('/:id', verifyAdmin, async (req, res) => {
   try {
     const vectorId = req.params.id
     const rawQuestion = req.body.question
@@ -109,7 +110,7 @@ router.put('/:id', async (req, res) => {
 })
 
 // Fetch all QA pairs
-router.get('/', async (req, res) => {
+router.get('/', verifyAdmin, async (req, res) => {
   try {
     const { data, error } = await supabase.from('qa_pairs').select('*')
 
@@ -125,7 +126,7 @@ router.get('/', async (req, res) => {
 })
 
 // Delete a QA pair
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyAdmin, async (req, res) => {
   try {
     const vectorId = req.params.id
 
