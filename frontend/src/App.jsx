@@ -1,8 +1,13 @@
-import React from 'react'
+import { Routes, Route } from 'react-router'
+import Chat from './pages/chat/Chat'
+import NotFound from './pages/NotFound'
 
 const App = () => {
   return (
-    <div>School Query Chatbot</div>
+    <Routes>
+      <Route path='/chat' element={<Chat />} />
+      <Route path='*' element={<NotFound />} />
+    </Routes>
   )
 }
 
