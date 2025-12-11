@@ -1,5 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Sparkles, User } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 
 const ChatInterface = () => {
@@ -48,9 +50,24 @@ const ChatInterface = () => {
             className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`rounded-lg p-3 ${msg.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+              className={`flex gap-2 ${msg.sender === 'user' ? 'flex-row' : 'flex-row-reverse'}`}
             >
-              {msg.text}
+              <div
+                className={`max-w-3xs rounded-lg p-3 wrap-break-word shadow-lg md:max-w-md ${msg.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+              >
+                {msg.text}
+              </div>
+              <Avatar className='h-10 w-10 border-2 border-white shadow-xl'>
+                {msg.sender === 'user' ? (
+                  <AvatarFallback className='text-primary-foreground bg-blue-500'>
+                    <User className='h-5 w-5' />
+                  </AvatarFallback>
+                ) : (
+                  <AvatarFallback className='bg-gray-100'>
+                    <Sparkles className='h-5 w-5' />
+                  </AvatarFallback>
+                )}
+              </Avatar>
             </div>
           </div>
         ))}
@@ -60,7 +77,7 @@ const ChatInterface = () => {
         <form onSubmit={handleSend}>
           <Input
             type='text'
-            placeholder='HELLO'
+            placeholder='Ask some questions...'
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
