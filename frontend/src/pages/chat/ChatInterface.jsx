@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Sparkles, User } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
+import TextTypewriter from './TextTypewriter'
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState([])
@@ -55,7 +56,11 @@ const ChatInterface = () => {
               <div
                 className={`max-w-3xs rounded-lg p-3 wrap-break-word shadow-lg md:max-w-md ${msg.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
               >
-                {msg.text}
+                {msg.sender === 'user' ? (
+                  msg.text
+                ) : (
+                  <TextTypewriter text={msg.text} />
+                )}
               </div>
               <Avatar className='h-10 w-10 border-2 border-white shadow-xl'>
                 {msg.sender === 'user' ? (
