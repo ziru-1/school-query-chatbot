@@ -4,7 +4,7 @@ import ChatInterface from './ChatInterface'
 
 const Chat = () => {
   return (
-    <div>
+    <div className='flex h-screen flex-col overflow-y-auto [scrollbar-gutter:stable]'>
       <Navbar />
       <ChatInterface />
     </div>
