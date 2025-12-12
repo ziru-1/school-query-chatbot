@@ -3,7 +3,7 @@ import Navbar from './Navbar'
 import ChatInterface from './ChatInterface'
 import { Toaster } from 'sonner'
 
-const Chat = () => {
+const ChatPage = () => {
   return (
     <div className='flex h-screen flex-col overflow-y-auto [scrollbar-gutter:stable]'>
       <Toaster
@@ -19,4 +19,4 @@ const Chat = () => {
   )
 }
 
-export default Chat
+export default ChatPage
