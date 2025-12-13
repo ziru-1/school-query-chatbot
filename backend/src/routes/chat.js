@@ -81,8 +81,6 @@ Answer to rewrite: "${answer}"
 
     res.json({
       answer: finalAnswer,
-      confidence,
-      foundMatch: confidence >= threshold,
     })
   } catch (err) {
     console.error(err)
