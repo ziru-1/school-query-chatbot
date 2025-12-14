@@ -20,14 +20,15 @@ router.post('/', async (req, res) => {
     // 1. Create embedding using Cohere v2
     const embedding = await embed(message, 'search_query')
 
-    // 2. Query Pinecone
+    // 2. Query Pinecone with more results for better matching
     const queryRes = await pineconeIndex.query({
       vector: embedding,
-      topK: 1,
+      topK: 5,
       includeMetadata: true,
     })
 
     const match = queryRes.matches?.[0] || null
+    const topMatches = queryRes.matches || []
 
     let question = null
     let answer = null
@@ -39,11 +40,14 @@ router.post('/', async (req, res) => {
       answer = match.metadata?.answer || null
     }
 
-    const threshold = 0.55
+    const highThreshold = 0.55 // Direct answer threshold
+    const lowThreshold = 0.35 // Suggestion threshold
 
     let finalAnswer
-    if (confidence >= threshold && answer) {
-      // 3. Make the answer more natural but without adding new facts
+    let suggestions = []
+
+    if (confidence >= highThreshold && answer) {
+      // High confidence: Return rewritten answer
       const gen = await cohere.chat({
         message: `
 You are a strict text-rewriter.
@@ -62,25 +66,46 @@ Rules:
 6. If rewriting requires adding information, return the answer unchanged.
 
 Answer to rewrite: "${answer}"
-  `,
+        `,
       })
 
       finalAnswer = gen.text
+    } else if (confidence >= lowThreshold && confidence < highThreshold) {
+      // Medium confidence: Suggest the closest match
+      finalAnswer = "I'm not entirely sure about that. Did you mean:"
+      suggestions = [question]
     } else {
-      finalAnswer = "I'm not sure about that yet."
+      // Low confidence: Find and suggest related questions
+      const relatedQuestions = topMatches
+        .filter((m) => m.score >= lowThreshold)
+        .slice(0, 3)
+        .map((m) => m.metadata?.question)
+        .filter(Boolean)
+
+      if (relatedQuestions.length > 0) {
+        finalAnswer =
+          "I couldn't find an exact match. Here are some related questions I can answer:"
+        suggestions = relatedQuestions
+      } else {
+        finalAnswer =
+          "I'm not sure about that yet. Please try rephrasing your question or ask something more specific."
+      }
     }
 
-    // 3. Store logs
+    // Store logs
     await supabase.from('chat_logs').insert({
       user_query: message,
       matched_question: question,
       matched_answer: answer,
       confidence,
       response: finalAnswer,
+      suggestions: suggestions.length > 0 ? suggestions : null,
     })
 
     res.json({
       answer: finalAnswer,
+      suggestions: suggestions.length > 0 ? suggestions : undefined,
+      confidence, // Optional: for debugging
     })
   } catch (err) {
     console.error(err)
