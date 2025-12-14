@@ -84,6 +84,13 @@ Answer to rewrite: "${answer}"
     })
   } catch (err) {
     console.error(err)
+
+    if (err?.statusCode === 429) {
+      return res.status(429).json({
+        error: 'AI usage limit reached (demo limitation).',
+      })
+    }
+
     res.status(500).json({ error: 'Server error' })
   }
 })
