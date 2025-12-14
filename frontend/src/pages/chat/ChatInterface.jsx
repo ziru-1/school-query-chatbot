@@ -16,30 +16,41 @@ const ChatInterface = () => {
   const inputRef = useRef(null)
 
   useEffect(() => {
-    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    requestAnimationFrame(() => {
+      messageEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    })
     inputRef.current?.focus()
   }, [messages])
 
-  const handleSend = async (e) => {
-    e.preventDefault()
-
+  const sendMessage = async (message) => {
     setIsQuerying(true)
 
-    if (!input.trim()) return
+    if (!message.trim()) return
 
     const newMessage = {
       id: Date.now().toString(),
-      text: input,
+      text: message,
       sender: 'user',
     }
 
     setMessages((prev) => [...prev, newMessage])
-    setInput('')
 
     try {
-      const data = await chatService.askChatbot({
-        message: input,
-      })
+      const data = await chatService.askChatbot({ message })
+
+      //Mock chatbot response
+
+      // const data = await new Promise((resolve) => {
+      //   setTimeout(() => {
+      //     resolve({
+      //       answer: 'Hey',
+      //       suggestions: [
+      //         'Where is the college of information and computer studies located guys okay?',
+      //         'Test 2 adasd ad asd ',
+      //       ],
+      //     })
+      //   }, 1000)
+      // })
 
       setMessages((prev) => [
         ...prev,
@@ -47,12 +58,22 @@ const ChatInterface = () => {
           id: Date.now().toString(),
           text: data.answer,
           sender: 'bot',
+          ...(data.suggestions?.length > 0 && {
+            suggestions: data.suggestions,
+          }),
         },
       ])
     } catch (err) {
       toast.error(err?.message || 'Something went wrong')
+    } finally {
       setIsQuerying(false)
     }
+  }
+
+  const handleSend = (e) => {
+    e.preventDefault()
+    sendMessage(input)
+    setInput('')
   }
 
   return (
@@ -89,12 +110,27 @@ const ChatInterface = () => {
                   {msg.sender === 'user' ? (
                     msg.text
                   ) : (
-                    <TextTypewriter
-                      text={msg.text}
-                      onDone={
-                        isLastMessage ? () => setIsQuerying(false) : undefined
-                      }
-                    />
+                    <div>
+                      <TextTypewriter
+                        text={msg.text}
+                        onDone={
+                          isLastMessage ? () => setIsQuerying(false) : undefined
+                        }
+                      />
+                      {msg.suggestions && (
+                        <div className='mt-2 flex flex-col'>
+                          {msg.suggestions.map((suggestion, i) => (
+                            <Button
+                              key={i}
+                              onClick={() => sendMessage(suggestion)}
+                              className='cursor-pointer justify-start rounded-none border-t! border-black/30! bg-transparent py-6 text-left text-sm font-normal whitespace-normal text-black hover:bg-gray-100 hover:text-blue-500'
+                            >
+                              → {suggestion}
+                            </Button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
@@ -102,6 +138,7 @@ const ChatInterface = () => {
           )
         })}
         <div ref={messageEndRef} />
+
         {messages.length === 0 && (
           <div className='absolute top-1/2 right-0 left-0 -translate-y-[13vh] text-center font-mono text-3xl font-bold text-black/80 md:-translate-y-[20vh] md:text-4xl'>
             Welcome to Vivy AI
