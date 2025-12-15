@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-const TextTypewriter = ({ text, onDone, speed = 7 }) => {
+const TextTypewriter = ({ text, onDone, speed = 3 }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const characters = text.split('')
 
