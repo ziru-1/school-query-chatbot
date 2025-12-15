@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Sparkles, User } from 'lucide-react'
+import { CornerDownRight, Sparkles, User } from 'lucide-react'
 import TextTypewriter from './TextTypewriter'
 
 const BotMessage = ({
@@ -34,7 +34,8 @@ const BotMessage = ({
               onClick={() => sendMessage(suggestion)}
               className='h-auto! min-h-0! w-full cursor-pointer items-start justify-start rounded-none border-t border-black/30 bg-transparent p-2! text-left text-sm leading-snug font-normal whitespace-normal text-black hover:bg-gray-100 hover:text-blue-500'
             >
-              → {suggestion}
+              <CornerDownRight className='h-5 w-5' />
+              {suggestion.charAt(0).toUpperCase() + suggestion.slice(1) + '?'}
             </Button>
           ))}
         </div>
