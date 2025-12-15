@@ -1,28 +1,23 @@
-import React from 'react'
-/* eslint-disable-next-line no-unused-vars */
-import { motion } from 'motion/react'
+import React, { useState, useEffect } from 'react'
 
-const TextTypewriter = ({ onDone, text }) => {
-  const characters = text.split('')
+const TextTypewriter = ({ text, onDone, speed = 7 }) => {
+  const [displayedText, setDisplayedText] = useState('')
+  const [currentIndex, setCurrentIndex] = useState(0)
 
-  return (
-    <span>
-      {characters.map((char, i) => {
-        const isLastChar = i === characters.length - 1
-        return (
-          <motion.span
-            key={i}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.05, delay: i * 0.01 }}
-            onAnimationComplete={isLastChar ? onDone : undefined}
-          >
-            {char}
-          </motion.span>
-        )
-      })}
-    </span>
-  )
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timer = setTimeout(() => {
+        setDisplayedText((prev) => prev + text[currentIndex])
+        setCurrentIndex((prev) => prev + 1)
+      }, speed)
+
+      return () => clearTimeout(timer)
+    } else {
+      onDone?.()
+    }
+  }, [currentIndex, text, speed, onDone])
+
+  return <span>{displayedText}</span>
 }
 
 export default TextTypewriter
