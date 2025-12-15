@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import chatService from '@/services/chat'
 import { toast } from 'sonner'
 import ChatInput from './ChatInput'
@@ -7,6 +7,7 @@ import ChatMessages from './ChatMessages'
 const ChatInterface = () => {
   const [messages, setMessages] = useState([])
   const [isQuerying, setIsQuerying] = useState(false)
+  const inputRef = useRef(null)
 
   const sendMessage = async (message) => {
     if (isQuerying || !message.trim()) return
@@ -53,6 +54,7 @@ const ChatInterface = () => {
       toast.error(err?.message || 'Something went wrong')
     } finally {
       setIsQuerying(false)
+      inputRef.current?.focus()
     }
   }
 
@@ -68,6 +70,7 @@ const ChatInterface = () => {
         onSend={sendMessage}
         isQuerying={isQuerying}
         messages={messages}
+        inputRef={inputRef}
       />
     </div>
   )

@@ -1,17 +1,15 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Send, Loader2 } from 'lucide-react'
 
-const ChatInput = ({ onSend, messages, isQuerying }) => {
+const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
   const [input, setInput] = useState('')
-  const inputRef = useRef(null)
 
   const handleSend = (e) => {
     e.preventDefault()
     onSend(input)
     setInput('')
-    inputRef.current?.focus()
   }
 
   return (
