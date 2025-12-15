@@ -23,9 +23,9 @@ const ChatInterface = () => {
   }, [messages])
 
   const sendMessage = async (message) => {
-    setIsQuerying(true)
+    if (isQuerying || !message.trim()) return
 
-    if (!message.trim()) return
+    setIsQuerying(true)
 
     const newMessage = {
       id: Date.now().toString(),
