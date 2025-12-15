@@ -1,8 +1,47 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Sparkles, User } from 'lucide-react'
 import TextTypewriter from './TextTypewriter'
+
+const BotMessage = ({
+  msg,
+  isLastMessage,
+  setIsQuerying,
+  sendMessage,
+  messageEndRef,
+}) => {
+  const [animationDone, setAnimationDone] = useState(false)
+
+  const handleTypewriterDone = () => {
+    setAnimationDone(true)
+
+    requestAnimationFrame(() => {
+      messageEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    })
+
+    if (isLastMessage) setIsQuerying(false)
+  }
+
+  return (
+    <div>
+      <TextTypewriter text={msg.text} onDone={handleTypewriterDone} />
+      {animationDone && msg.suggestions && (
+        <div className='mt-2 flex flex-col'>
+          {msg.suggestions.map((suggestion, i) => (
+            <Button
+              key={i}
+              onClick={() => sendMessage(suggestion)}
+              className='h-auto! min-h-0! w-full cursor-pointer items-start justify-start rounded-none border-t border-black/30 bg-transparent p-2! text-left text-sm leading-snug font-normal whitespace-normal text-black hover:bg-gray-100 hover:text-blue-500'
+            >
+              → {suggestion}
+            </Button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 const ChatMessages = ({ sendMessage, messages, setIsQuerying }) => {
   const messageEndRef = useRef(null)
@@ -17,13 +56,18 @@ const ChatMessages = ({ sendMessage, messages, setIsQuerying }) => {
     <div className='flex-1 px-4 pt-4'>
       {messages.map((msg, index) => {
         const isLastMessage = index === messages.length - 1
+
         return (
           <div
             key={msg.id}
-            className={`mb-4 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`mb-4 flex ${
+              msg.sender === 'user' ? 'justify-end' : 'justify-start'
+            }`}
           >
             <div
-              className={`flex gap-2 ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
+              className={`flex gap-2 ${
+                msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
+              }`}
             >
               <Avatar className='h-10 w-10 border-2 border-white shadow-xl'>
                 {msg.sender === 'user' ? (
@@ -36,6 +80,7 @@ const ChatMessages = ({ sendMessage, messages, setIsQuerying }) => {
                   </AvatarFallback>
                 )}
               </Avatar>
+
               <div
                 className={`max-w-70 rounded-lg p-3 shadow-lg md:max-w-md ${
                   msg.sender === 'user'
@@ -46,33 +91,20 @@ const ChatMessages = ({ sendMessage, messages, setIsQuerying }) => {
                 {msg.sender === 'user' ? (
                   msg.text
                 ) : (
-                  <div>
-                    <TextTypewriter
-                      text={msg.text}
-                      onDone={
-                        isLastMessage ? () => setIsQuerying(false) : undefined
-                      }
-                    />
-                    {msg.suggestions && (
-                      <div className='mt-2 flex flex-col'>
-                        {msg.suggestions.map((suggestion, i) => (
-                          <Button
-                            key={i}
-                            onClick={() => sendMessage(suggestion)}
-                            className='h-auto! min-h-0! w-full cursor-pointer items-start justify-start rounded-none border-t border-black/30 bg-transparent p-2! text-left text-sm leading-snug font-normal whitespace-normal text-black hover:bg-gray-100 hover:text-blue-500'
-                          >
-                            → {suggestion}
-                          </Button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                  <BotMessage
+                    msg={msg}
+                    isLastMessage={isLastMessage}
+                    setIsQuerying={setIsQuerying}
+                    sendMessage={sendMessage}
+                    messageEndRef={messageEndRef}
+                  />
                 )}
               </div>
             </div>
           </div>
         )
       })}
+
       <div ref={messageEndRef} />
 
       {messages.length === 0 && (

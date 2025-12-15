@@ -52,8 +52,8 @@ const ChatInterface = () => {
       ])
     } catch (err) {
       toast.error(err?.message || 'Something went wrong')
-    } finally {
       setIsQuerying(false)
+    } finally {
       inputRef.current?.focus()
     }
   }
