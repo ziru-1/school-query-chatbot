@@ -30,7 +30,7 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
         />
         <Button
           type='submit'
-          className='rounded-l-xl rounded-r-3xl pr-0.5'
+          className='cursor-pointer rounded-l-xl rounded-r-3xl pr-0.5'
           size='icon'
           disabled={isQuerying}
         >
