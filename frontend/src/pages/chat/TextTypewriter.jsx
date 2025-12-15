@@ -1,23 +1,34 @@
 import React, { useState, useEffect } from 'react'
 
 const TextTypewriter = ({ text, onDone, speed = 7 }) => {
-  const [displayedText, setDisplayedText] = useState('')
   const [currentIndex, setCurrentIndex] = useState(0)
+  const characters = text.split('')
 
   useEffect(() => {
-    if (currentIndex < text.length) {
+    if (currentIndex < characters.length) {
       const timer = setTimeout(() => {
-        setDisplayedText((prev) => prev + text[currentIndex])
         setCurrentIndex((prev) => prev + 1)
       }, speed)
-
       return () => clearTimeout(timer)
     } else {
       onDone?.()
     }
-  }, [currentIndex, text, speed, onDone])
+  }, [currentIndex, characters.length, speed, onDone])
 
-  return <span>{displayedText}</span>
+  return (
+    <span style={{ display: 'inline-block', minWidth: '1ch' }}>
+      {characters.map((char, i) => (
+        <span
+          key={i}
+          style={{
+            visibility: i < currentIndex ? 'visible' : 'hidden',
+          }}
+        >
+          {char}
+        </span>
+      ))}
+    </span>
+  )
 }
 
 export default TextTypewriter
