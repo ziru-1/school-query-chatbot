@@ -15,32 +15,48 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Lightbulb, Send } from 'lucide-react'
 import { toast } from 'sonner'
+import { supabase } from '@/lib/supabase'
 
 const SuggestionModal = () => {
   const [open, setOpen] = useState(false)
   const [question, setQuestion] = useState('')
   const [context, setContext] = useState('')
-  const [email, setEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const questionMaxLength = 200
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!question.trim()) return
+    const trimmedQuestion = question.trim()
+    if (!trimmedQuestion) return
+    if (trimmedQuestion.length > questionMaxLength) {
+      toast.error(
+        `Question cannot be longer than ${questionMaxLength} characters`,
+      )
+      return
+    }
 
     setIsSubmitting(true)
 
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    try {
+      const { error } = await supabase.from('question_suggestions').insert({
+        question: trimmedQuestion,
+        context,
+      })
 
-    console.log({ question, context, email })
+      if (error) throw error
 
-    setQuestion('')
-    setContext('')
-    setEmail('')
-    setIsSubmitting(false)
-    setOpen(false)
+      setQuestion('')
+      setContext('')
+      setOpen(false)
 
-    toast.success('Successfully submitted your question')
+      toast.success('Successfully submitted your question')
+    } catch (err) {
+      console.error(err.message)
+      toast.error('Failed to submit your question')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -67,8 +83,12 @@ const SuggestionModal = () => {
               placeholder='What question should Vivy AI be able to answer?'
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
+              maxLength={questionMaxLength}
               required
             />
+            <p className='text-muted-foreground text-sm'>
+              {question.length}/{questionMaxLength} characters
+            </p>
           </div>
 
           <div className='space-y-2'>
@@ -87,7 +107,11 @@ const SuggestionModal = () => {
             <DialogClose asChild>
               <Button variant='outline'>Cancel</Button>
             </DialogClose>
-            <Button type='submit' disabled={isSubmitting} className='gap-2'>
+            <Button
+              type='submit'
+              disabled={isSubmitting || !question.trim()}
+              className='gap-2'
+            >
               {isSubmitting ? 'Submitting...' : 'Submit Suggestion'}
               <Send />
             </Button>
