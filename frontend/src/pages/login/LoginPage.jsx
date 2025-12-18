@@ -4,15 +4,33 @@ import logo from '@/assets/temp-logo.png'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
+import { supabase } from '@/lib/supabase'
+import { useNavigate } from 'react-router'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(email)
-    console.log(password)
+
+    if (!email.trim() || !password.trim()) return
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (error) throw error
+
+      navigate('/dashboard')
+    } catch {
+      toast.error('Invalid email or password')
+    }
   }
 
   return (
@@ -49,7 +67,7 @@ const LoginPage = () => {
               <Input
                 id='password'
                 type='password'
-                placeholder='••••••••••••'
+                placeholder='Enter your password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
