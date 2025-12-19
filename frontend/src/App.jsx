@@ -4,6 +4,8 @@ import NotFound from './pages/NotFound'
 import LoginPage from './pages/login/LoginPage'
 import AdminPage from './pages/admin/AdminPage'
 import { Toaster } from 'sonner'
+import ProtectedLayout from './lib/ProtectedLayout'
+import PublicLayout from './lib/PublicLayout'
 
 const App = () => {
   return (
@@ -17,8 +19,15 @@ const App = () => {
       />
       <Routes>
         <Route path='/chat' element={<ChatPage />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/admin' element={<AdminPage />} />
+
+        <Route element={<PublicLayout />}>
+          <Route path='/login' element={<LoginPage />} />
+        </Route>
+
+        <Route element={<ProtectedLayout />}>
+          <Route path='/admin' element={<AdminPage />} />
+        </Route>
+
         <Route path='*' element={<NotFound />} />
       </Routes>
     </>
