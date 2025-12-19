@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useNavigate } from 'react-router'
 
-const DashboardPage = () => {
+const AdminPage = () => {
   const navigate = useNavigate()
 
   const handleClick = async () => {
@@ -24,10 +24,10 @@ const DashboardPage = () => {
 
   return (
     <div>
-      DashboardPage
+      Admin
       <button onClick={handleClick}>Sign out</button>
     </div>
   )
 }
 
-export default DashboardPage
+export default AdminPage

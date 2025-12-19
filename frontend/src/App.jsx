@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router'
 import ChatPage from './pages/chat/ChatPage'
 import NotFound from './pages/NotFound'
 import LoginPage from './pages/login/LoginPage'
-import DashboardPage from './pages/dashboard/DashboardPage'
+import AdminPage from './pages/admin/AdminPage'
 import { Toaster } from 'sonner'
 
 const App = () => {
@@ -18,7 +18,7 @@ const App = () => {
       <Routes>
         <Route path='/chat' element={<ChatPage />} />
         <Route path='/login' element={<LoginPage />} />
-        <Route path='/dashboard' element={<DashboardPage />} />
+        <Route path='/admin' element={<AdminPage />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
     </>
