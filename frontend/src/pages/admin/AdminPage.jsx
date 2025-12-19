@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useNavigate } from 'react-router'
+import { useAuth } from '@/lib/AuthContext'
 
 const AdminPage = () => {
+  const { session, loading } = useAuth()
   const navigate = useNavigate()
 
   const handleClick = async () => {
@@ -12,15 +14,9 @@ const AdminPage = () => {
   }
 
   useEffect(() => {
-    const getSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-      console.log(session)
-    }
-
-    getSession()
-  }, [])
+    console.log('Session:', session)
+    console.log('Loading:', loading)
+  }, [session, loading])
 
   return (
     <div>
