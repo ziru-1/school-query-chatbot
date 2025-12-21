@@ -4,8 +4,8 @@ import NotFound from './pages/NotFound'
 import LoginPage from './pages/login/LoginPage'
 import AdminPage from './pages/admin/AdminPage'
 import { Toaster } from 'sonner'
-import ProtectedLayout from './lib/ProtectedLayout'
-import PublicLayout from './lib/PublicLayout'
+import ProtectedLayout from './components/layout/ProtectedLayout'
+import PublicLayout from './components/layout/PublicLayout'
 
 const App = () => {
   return (
