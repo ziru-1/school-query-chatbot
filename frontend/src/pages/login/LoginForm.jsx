@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import logo from '@/assets/temp-logo.png'
+import Logo from '@/components/ui/Logo'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -38,7 +38,7 @@ const LoginForm = () => {
   return (
     <div className='-translate-y-15 space-y-2 rounded-lg p-12 shadow-lg'>
       <div className='flex justify-center'>
-        <img src={logo} alt='Logo' className='h-10 w-10 rounded-2xl shadow' />
+        <Logo />
       </div>
       <h1 className='text-center text-2xl font-medium'>
         Log in to your account

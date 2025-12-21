@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase'
 import { useNavigate } from 'react-router'
 import { useAuth } from '@/context/AuthContext'
 import { Link } from 'react-router'
-import logo from '@/assets/temp-logo.png'
+import Logo from '@/components/ui/Logo'
 import { Home, FileText, MessageCircle, User2, ChevronUp } from 'lucide-react'
 import {
   Sidebar,
@@ -57,11 +57,7 @@ const AdminPage = () => {
         <Sidebar>
           <SidebarHeader>
             <div className='flex items-center gap-2 px-2 py-2'>
-              <img
-                src={logo}
-                alt='Logo'
-                className='h-10 w-10 rounded-2xl shadow'
-              />
+              <Logo />
               <span className='text-lg font-bold'>Vivy AI</span>
             </div>
           </SidebarHeader>
