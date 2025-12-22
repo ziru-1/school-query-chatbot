@@ -7,7 +7,7 @@ const PublicLayout = () => {
 
   if (loading) return null
 
-  if (session) return <Navigate to='/admin' replace />
+  if (session) return <Navigate to='/admin/dashboard' replace />
 
   return <Outlet />
 }

@@ -28,7 +28,7 @@ const LoginForm = () => {
 
       if (error) throw error
 
-      navigate('/admin')
+      navigate('/admin/dashboard')
     } catch {
       toast.error('Invalid email or password')
     } finally {
