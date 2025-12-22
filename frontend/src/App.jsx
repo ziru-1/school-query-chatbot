@@ -2,10 +2,12 @@ import { Routes, Route } from 'react-router'
 import ChatPage from './pages/chat/ChatPage'
 import NotFound from './pages/NotFound'
 import LoginPage from './pages/login/LoginPage'
-import AdminPage from './pages/admin/AdminPage'
 import { Toaster } from 'sonner'
-import ProtectedLayout from './components/layout/ProtectedLayout'
+import AdminLayout from './components/layout/AdminLayout'
 import PublicLayout from './components/layout/PublicLayout'
+import Dashboard from './pages/admin/Dashboard'
+import QAPage from './pages/admin/QAPage'
+import Suggestions from './pages/admin/Suggestions'
 
 const App = () => {
   return (
@@ -24,8 +26,10 @@ const App = () => {
           <Route path='/login' element={<LoginPage />} />
         </Route>
 
-        <Route element={<ProtectedLayout />}>
-          <Route path='/admin' element={<AdminPage />} />
+        <Route element={<AdminLayout />}>
+          <Route path='/admin/dashboard' element={<Dashboard />} />
+          <Route path='/admin/qa' element={<QAPage />} />
+          <Route path='/admin/suggestions' element={<Suggestions />} />
         </Route>
 
         <Route path='*' element={<NotFound />} />
