@@ -147,7 +147,7 @@ const AdminLayout = () => {
 
           <SidebarFooter>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger asChild className='cursor-pointer'>
                 <SidebarMenuButton>
                   <User2 />
                   <span>{session.user.email}</span>
