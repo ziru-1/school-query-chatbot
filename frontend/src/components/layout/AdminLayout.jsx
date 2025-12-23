@@ -2,7 +2,6 @@ import React from 'react'
 import { useNavigate } from 'react-router'
 import { Navigate, Outlet } from 'react-router'
 import { useAuth } from '@/context/AuthContext'
-import { supabase } from '@/lib/supabase'
 import { Link } from 'react-router'
 import Logo from '@/components/ui/Logo'
 import {
@@ -34,6 +33,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { signOut } from '@/services/auth'
+import { toast } from 'sonner'
 
 const AdminLayout = () => {
   const { session, role, loading } = useAuth()
@@ -44,8 +45,13 @@ const AdminLayout = () => {
   if (!session) return <Navigate to='/login' replace />
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    navigate('/login')
+    try {
+      await signOut()
+      navigate('/login')
+    } catch (error) {
+      console.log('Sign out failed: ', error)
+      toast.error('Could not sign out. Please try again.')
+    }
   }
 
   const navItemsCommon = [

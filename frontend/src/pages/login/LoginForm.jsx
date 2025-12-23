@@ -4,8 +4,8 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
-import { supabase } from '@/lib/supabase'
 import { useNavigate } from 'react-router'
+import { signInWithEmail } from '@/services/auth'
 
 const LoginForm = () => {
   const [email, setEmail] = useState('')
@@ -21,12 +21,7 @@ const LoginForm = () => {
     if (!email.trim() || !password.trim()) return
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-
-      if (error) throw error
+      await signInWithEmail(email, password)
 
       navigate('/admin/dashboard')
     } catch {
