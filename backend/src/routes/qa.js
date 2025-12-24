@@ -1,61 +1,41 @@
 import express from 'express'
-import { pineconeIndex } from '../config/pinecone.js'
-import { supabase } from '../config/supabase.js'
+import { pineconeIndex } from '../lib/pinecone.js'
+import { supabase } from '../lib/supabase.js'
 import { cleanText } from '../utils/cleanText.js'
-import { embed } from '../utils/embed.js'
+import { embed } from '../services/embed.service.js'
 import { verifyAdmin } from '../middleware/auth.js'
+import { createQAPair } from '../services/qa.service.js'
 
 const router = express.Router()
 
 // Create or update a QA pair
 router.post('/', verifyAdmin, async (req, res) => {
   try {
-    const rawQuestion = req.body.question
-    const rawAnswer = req.body.answer
+    const { question, answer, sourceSuggestionId = null } = req.body
+    const admin = req.admin
 
-    if (!rawQuestion || !rawAnswer) {
+    if (!question || !answer) {
       return res.status(400).json({ error: 'Question and answer are required' })
     }
 
-    const question = cleanText(rawQuestion)
-    const answer = cleanText(rawAnswer)
-
-    // 1. Embed with Cohere v2
-    const embedding = await embed(question, 'search_document')
-
-    // 2. Create vector ID
-    const vectorId = crypto.randomUUID()
-
-    // 3. Run Pinecone + Supabase in parallel
-    const pineconePromise = pineconeIndex.upsert([
-      {
-        id: vectorId,
-        values: embedding,
-        metadata: { question, answer },
-      },
-    ])
-
-    const supabasePromise = supabase
-      .from('qa_pairs')
-      .insert({ question, answer, vector_id: vectorId })
-
-    const [pineconeResult, supabaseResult] = await Promise.all([
-      pineconePromise,
-      supabasePromise,
-    ])
-
-    if (supabaseResult.error) {
-      return res.status(500).json({ error: supabaseResult.error.message })
-    }
+    const result = await createQAPair({
+      question,
+      answer,
+      actorAdminId: admin.auth_user_id,
+      sourceSuggestionId,
+    })
 
     res.json({
       success: true,
       message: 'QA added',
-      vector_id: vectorId,
+      qa_pair_id: result.qaPairId,
+      vector_id: result.vectorId,
     })
   } catch (err) {
     console.error(err)
-    res.status(500).json({ error: 'Server error' })
+    res.status(500).json({
+      error: err.message || 'Server error',
+    })
   }
 })
 
