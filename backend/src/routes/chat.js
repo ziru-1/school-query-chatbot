@@ -1,9 +1,9 @@
 import express from 'express'
-import { cohere } from '../config/cohere.js'
-import { pineconeIndex } from '../config/pinecone.js'
-import { supabase } from '../config/supabase.js'
+import { cohere } from '../lib/cohere.js'
+import { pineconeIndex } from '../lib/pinecone.js'
+import { supabase } from '../lib/supabase.js'
 import { cleanText } from '../utils/cleanText.js'
-import { embed } from '../utils/embed.js'
+import { embed } from '../services/embed.service.js'
 
 const router = express.Router()
 
