@@ -40,11 +40,11 @@ router.post('/', verifyAdmin, async (req, res) => {
 })
 
 // Update an existing QA pair
-router.put('/:id', verifyAdmin, async (req, res) => {
+router.put('/:qaPairId', verifyAdmin, async (req, res) => {
   try {
-    const vectorId = req.params.id
-    const rawQuestion = req.body.question
-    const rawAnswer = req.body.answer
+    const { qaPairId } = req.params
+    const { question: rawQuestion, answer: rawAnswer } = req.body
+    const admin = req.admin
 
     if (!rawQuestion || !rawAnswer) {
       return res.status(400).json({ error: 'Question and answer are required' })
@@ -53,11 +53,28 @@ router.put('/:id', verifyAdmin, async (req, res) => {
     const question = cleanText(rawQuestion)
     const answer = cleanText(rawAnswer)
 
-    // 1. Embed using Cohere v2
+    // 1. Fetch existing QA (needed for vector_id + logs)
+    const { data: existing, error: fetchError } = await supabase
+      .from('qa_pairs')
+      .select('id, vector_id, question, answer')
+      .eq('id', qaPairId)
+      .single()
+
+    if (fetchError || !existing) {
+      return res.status(404).json({ error: 'QA pair not found' })
+    }
+
+    const {
+      vector_id: vectorId,
+      question: oldQuestion,
+      answer: oldAnswer,
+    } = existing
+
+    // 2. Embed new question
     const embedding = await embed(question, 'search_document')
 
-    // 2. Pinecone + Supabase in parallel
-    const pineconePromise = pineconeIndex.upsert([
+    // 3. Update Pinecone FIRST
+    await pineconeIndex.upsert([
       {
         id: vectorId,
         values: embedding,
@@ -65,23 +82,36 @@ router.put('/:id', verifyAdmin, async (req, res) => {
       },
     ])
 
-    const supabasePromise = supabase
+    // 4. Update Supabase
+    const { error: updateError } = await supabase
       .from('qa_pairs')
       .update({ question, answer })
-      .eq('vector_id', vectorId)
+      .eq('id', qaPairId)
 
-    const [, supabaseResult] = await Promise.all([
-      pineconePromise,
-      supabasePromise,
-    ])
+    if (updateError) {
+      return res.status(500).json({ error: updateError.message })
+    }
 
-    if (supabaseResult.error) {
-      return res.status(500).json({ error: supabaseResult.error.message })
+    // 5. Insert log (you can extract this later)
+    const { error: logError } = await supabase.from('qa_pair_logs').insert({
+      qa_pair_id: qaPairId,
+      actor_admin_id: admin.auth_user_id,
+      action_type: 'update',
+      old_question: oldQuestion,
+      new_question: question,
+      old_answer: oldAnswer,
+      new_answer: answer,
+    })
+
+    if (logError) {
+      return res.status(500).json({ error: logError.message })
     }
 
     res.json({
       success: true,
       message: 'QA pair updated',
+      qa_pair_id: qaPairId,
+      vector_id: vectorId,
     })
   } catch (err) {
     console.error(err)
