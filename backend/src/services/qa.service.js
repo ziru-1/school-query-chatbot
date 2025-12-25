@@ -42,7 +42,7 @@ export async function createQAPair({
   if (error) throw error
 
   // Log creation
-  await supabase.from('qa_pair_logs').insert({
+  const { error: logError } = await supabase.from('qa_pair_logs').insert({
     qa_pair_id: qaRow.id,
     vector_id: vectorId,
     actor_admin_id: actorAdminId,
@@ -51,6 +51,8 @@ export async function createQAPair({
     new_answer: cleanAnswer,
     source_suggestion_id: sourceSuggestionId,
   })
+
+  if (logError) console.error('Failed to log deletion', logError)
 
   return {
     qaPairId: qaRow.id,

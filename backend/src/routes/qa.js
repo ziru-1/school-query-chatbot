@@ -104,9 +104,7 @@ router.put('/:qaPairId', verifyAdmin, async (req, res) => {
       new_answer: answer,
     })
 
-    if (logError) {
-      return res.status(500).json({ error: logError.message })
-    }
+    if (logError) console.error('Failed to log deletion', logError)
 
     res.json({
       success: true,
@@ -174,9 +172,7 @@ router.delete('/:qaPairId', verifyAdmin, async (req, res) => {
       new_answer: null,
     })
 
-    if (logError) {
-      return res.status(500).json({ error: logError.message })
-    }
+    if (logError) console.error('Failed to log deletion', logError)
 
     // 4. Delete QA row LAST
     const { error: deleteError } = await supabase
