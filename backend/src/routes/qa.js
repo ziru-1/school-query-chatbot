@@ -95,6 +95,7 @@ router.put('/:qaPairId', verifyAdmin, async (req, res) => {
     // 5. Insert log (you can extract this later)
     const { error: logError } = await supabase.from('qa_pair_logs').insert({
       qa_pair_id: qaPairId,
+      vector_id: vectorId,
       actor_admin_id: admin.auth_user_id,
       action_type: 'update',
       old_question: oldQuestion,
@@ -136,20 +137,63 @@ router.get('/', verifyAdmin, async (req, res) => {
 })
 
 // Delete a QA pair
-router.delete('/:id', verifyAdmin, async (req, res) => {
+router.delete('/:qaPairId', verifyAdmin, async (req, res) => {
   try {
-    const vectorId = req.params.id
+    const { qaPairId } = req.params
+    const admin = req.admin
 
-    // Delete vector + row in parallel
-    const pineconePromise = pineconeIndex.deleteMany([vectorId])
-    const supabasePromise = supabase
+    // 1. Fetch QA pair
+    const { data: existing, error: fetchError } = await supabase
+      .from('qa_pairs')
+      .select('id, question, answer, vector_id')
+      .eq('id', qaPairId)
+      .single()
+
+    if (fetchError || !existing) {
+      return res.status(404).json({ error: 'QA pair not found' })
+    }
+
+    const {
+      vector_id: vectorId,
+      question: oldQuestion,
+      answer: oldAnswer,
+    } = existing
+
+    // 2. Delete from Pinecone first
+    await pineconeIndex.deleteMany([vectorId])
+
+    // 3. Log deletion FIRST
+    const { error: logError } = await supabase.from('qa_pair_logs').insert({
+      qa_pair_id: qaPairId,
+      vector_id: vectorId,
+      actor_admin_id: admin.auth_user_id,
+      action_type: 'delete',
+      old_question: oldQuestion,
+      new_question: null,
+      old_answer: oldAnswer,
+      new_answer: null,
+    })
+
+    if (logError) {
+      return res.status(500).json({ error: logError.message })
+    }
+
+    // 4. Delete QA row LAST
+    const { error: deleteError } = await supabase
       .from('qa_pairs')
       .delete()
-      .eq('vector_id', vectorId)
+      .eq('id', qaPairId)
 
-    await Promise.all([pineconePromise, supabasePromise])
+    if (deleteError) {
+      return res.status(500).json({ error: deleteError.message })
+    }
 
-    res.json({ success: true, message: 'QA pair deleted' })
+    res.json({
+      success: true,
+      message: 'QA pair deleted',
+      qa_pair_id: qaPairId,
+      vector_id: vectorId,
+    })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Server error' })

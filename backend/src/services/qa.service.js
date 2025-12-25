@@ -44,6 +44,7 @@ export async function createQAPair({
   // Log creation
   await supabase.from('qa_pair_logs').insert({
     qa_pair_id: qaRow.id,
+    vector_id: vectorId,
     actor_admin_id: actorAdminId,
     action_type: 'create',
     new_question: cleanQuestion,
