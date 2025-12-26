@@ -161,8 +161,11 @@ const AdminLayout = () => {
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent side='top' className='w-68 md:w-60'>
-                <DropdownMenuItem onClick={handleSignOut}>
-                  <LogOut />
+                <DropdownMenuItem
+                  onClick={handleSignOut}
+                  className='text-red-500! hover:bg-red-100! hover:text-red-500!'
+                >
+                  <LogOut className='text-red-500' />
                   Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
