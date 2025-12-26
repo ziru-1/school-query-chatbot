@@ -170,8 +170,8 @@ const AdminLayout = () => {
           </SidebarFooter>
         </Sidebar>
 
-        <main className='flex-1'>
-          <div className='flex items-center gap-4 divide-x border-b border-gray-200 p-4'>
+        <main className='min-h-0 flex-1 overflow-y-auto'>
+          <div className='sticky top-0 z-100 flex items-center gap-4 divide-x border-b border-gray-200 bg-white p-4'>
             <SidebarTrigger className='md:hidden' />
             <span className='font-semibold'>{message}</span>
           </div>
