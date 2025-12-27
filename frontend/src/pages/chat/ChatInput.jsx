@@ -14,11 +14,11 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
 
   return (
     <div
-      className={`bg-white px-4 pt-4 pb-4 ${messages.length === 0 ? 'md:sticky md:-translate-y-[40vh] ' : 'sticky bottom-0'}`}
+      className={`px-4 pt-4 pb-4 ${messages.length === 0 ? 'md:sticky md:-translate-y-[40vh] ' : 'sticky bottom-0'}`}
     >
       <form
         onSubmit={handleSend}
-        className='flex items-center justify-center gap-3 rounded-3xl border border-black/50 bg-white pr-2 shadow-lg'
+        className='border-foreground/50 bg-background flex items-center justify-center gap-3 rounded-3xl border pr-2 shadow-lg'
       >
         <Input
           ref={inputRef}
@@ -26,7 +26,7 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
           placeholder='Ask some questions...'
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className='text-md border-0 bg-transparent py-6 pl-6 shadow-none focus-visible:ring-0'
+          className='text-md border-0 bg-transparent! py-6 pl-6 shadow-none focus-visible:ring-0'
         />
         <Button
           type='submit'

@@ -70,14 +70,14 @@ const ChatMessages = ({ sendMessage, messages, setIsQuerying }) => {
                 msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
               }`}
             >
-              <Avatar className='h-10 w-10 border-2 border-white shadow-xl'>
+              <Avatar className='border-background h-10 w-10 border-2 shadow-xl'>
                 {msg.sender === 'user' ? (
                   <AvatarFallback className='bg-blue-500 text-white'>
                     <User className='h-5 w-5' />
                   </AvatarFallback>
                 ) : (
                   <AvatarFallback className='bg-gray-100'>
-                    <Sparkles className='h-5 w-5' />
+                    <Sparkles className='h-5 w-5 text-black' />
                   </AvatarFallback>
                 )}
               </Avatar>
@@ -109,7 +109,7 @@ const ChatMessages = ({ sendMessage, messages, setIsQuerying }) => {
       <div ref={messageEndRef} />
 
       {messages.length === 0 && (
-        <div className='absolute top-1/2 right-0 left-0 -translate-y-[13vh] text-center font-mono text-3xl font-bold text-black/80 md:-translate-y-[20vh] md:text-4xl'>
+        <div className='text-foreground absolute top-1/2 right-0 left-0 -translate-y-[13vh] text-center font-mono text-3xl font-bold md:-translate-y-[20vh] md:text-4xl'>
           Welcome to Vivy AI
         </div>
       )}

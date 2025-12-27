@@ -23,6 +23,7 @@ const TextTypewriter = ({ text, onDone, speed = 3 }) => {
           style={{
             visibility: i < currentIndex ? 'visible' : 'hidden',
           }}
+          className='text-black'
         >
           {char}
         </span>

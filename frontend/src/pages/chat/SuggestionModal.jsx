@@ -61,7 +61,7 @@ const SuggestionModal = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className='text-muted-foreground transition-color cursor-pointer rounded-2xl p-2 shadow hover:bg-gray-100 hover:text-blue-500'>
+      <DialogTrigger className='text-muted-foreground bg-background transition-color hover:bg-accent cursor-pointer rounded-2xl p-2 shadow hover:text-blue-500'>
         <Lightbulb className='h-6 w-6' />
       </DialogTrigger>
       <DialogContent>

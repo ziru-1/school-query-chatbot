@@ -1,18 +1,10 @@
-import React from 'react'
-import { useNavigate } from 'react-router'
-import { Navigate, Outlet } from 'react-router'
-import { useAuth } from '@/context/AuthContext'
-import { Link } from 'react-router'
-import Logo from '@/components/ui/Logo'
 import {
-  Home,
-  FileText,
-  MessageCircle,
-  User2,
-  ChevronUp,
-  LogOut,
-  UserCog,
-} from 'lucide-react'
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import Logo from '@/components/ui/Logo'
 import {
   Sidebar,
   SidebarContent,
@@ -27,13 +19,18 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { useAuth } from '@/context/AuthContext'
 import { signOut } from '@/services/auth'
+import {
+  ChevronUp,
+  FileText,
+  Home,
+  LogOut,
+  MessageCircle,
+  User2,
+  UserCog,
+} from 'lucide-react'
+import { Link, Navigate, Outlet, useNavigate } from 'react-router'
 import { toast } from 'sonner'
 
 const AdminLayout = () => {
@@ -163,9 +160,9 @@ const AdminLayout = () => {
               <DropdownMenuContent side='top' className='w-68 md:w-60'>
                 <DropdownMenuItem
                   onClick={handleSignOut}
-                  className='text-red-500! hover:bg-red-100! hover:text-red-500!'
+                  className='text-destructive! hover:bg-destructive/10!'
                 >
-                  <LogOut className='text-red-500' />
+                  <LogOut className='text-destructive' />
                   Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -173,8 +170,8 @@ const AdminLayout = () => {
           </SidebarFooter>
         </Sidebar>
 
-        <main className='min-h-0 flex-1 overflow-y-auto'>
-          <div className='sticky top-0 z-10 flex items-center gap-4 divide-x border-b border-gray-200 bg-white p-4'>
+        <main className='bg-sidebar min-h-0 flex-1 overflow-y-auto'>
+          <div className='bg-sidebar border-sidebar-border sticky top-0 z-10 flex items-center gap-4 divide-x border-b p-4'>
             <SidebarTrigger className='md:hidden' />
             <span className='font-semibold'>{message}</span>
           </div>
