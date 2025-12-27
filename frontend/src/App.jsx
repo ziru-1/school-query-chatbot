@@ -5,9 +5,9 @@ import LoginPage from './pages/login/LoginPage'
 import { Toaster } from 'sonner'
 import AdminLayout from './components/layout/AdminLayout'
 import PublicLayout from './components/layout/PublicLayout'
-import Dashboard from './pages/admin/Dashboard'
-import QAPage from './pages/admin/QAPage'
-import Suggestions from './pages/admin/Suggestions'
+import Dashboard from './pages/admin/dashboard/Dashboard'
+import QAPage from './pages/admin/qa/QAPage'
+import Suggestions from './pages/admin/suggestions/Suggestions'
 
 const App = () => {
   return (
