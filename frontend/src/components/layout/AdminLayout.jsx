@@ -27,15 +27,62 @@ import {
   Home,
   LogOut,
   MessageCircle,
+  Moon,
+  Sun,
   User2,
   UserCog,
 } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Link, Navigate, Outlet, useNavigate } from 'react-router'
 import { toast } from 'sonner'
+
+const navItemsCommon = [
+  {
+    label: 'Dashboard',
+    href: '/admin/dashboard',
+    icon: <Home />,
+    roles: ['admin', 'superadmin'],
+  },
+  {
+    label: 'QA Pairs',
+    href: '/admin/qa',
+    icon: <FileText />,
+    roles: ['admin', 'superadmin'],
+  },
+  {
+    label: 'Suggestions',
+    href: '/admin/suggestions',
+    icon: <MessageCircle />,
+    roles: ['admin', 'superadmin'],
+  },
+]
+
+const navItemsSuperadmin = [
+  {
+    label: 'Manage Admins',
+    href: '/admin/manage',
+    icon: <UserCog />,
+    roles: ['superadmin'],
+  },
+]
 
 const AdminLayout = () => {
   const { session, role, loading } = useAuth()
   const navigate = useNavigate()
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('darkMode')
+    return saved === 'true'
+  })
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('darkMode', 'true')
+    } else {
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem('darkMode', 'false')
+    }
+  }, [isDark])
 
   if (loading) return null
 
@@ -51,43 +98,9 @@ const AdminLayout = () => {
     }
   }
 
-  const navItemsCommon = [
-    {
-      label: 'Dashboard',
-      href: '/admin/dashboard',
-      icon: <Home />,
-      roles: ['admin', 'superadmin'],
-    },
-    {
-      label: 'QA Pairs',
-      href: '/admin/qa',
-      icon: <FileText />,
-      roles: ['admin', 'superadmin'],
-    },
-    {
-      label: 'Suggestions',
-      href: '/admin/suggestions',
-      icon: <MessageCircle />,
-      roles: ['admin', 'superadmin'],
-    },
-  ]
-
-  const navItemsSuperadmin = [
-    {
-      label: 'Manage Admins',
-      href: '/admin/manage',
-      icon: <UserCog />,
-      roles: ['superadmin'],
-    },
-  ]
-
-  const messages = {
-    '/admin/dashboard': 'Dashboard',
-    '/admin/qa': 'QA Pairs',
-    '/admin/suggestions': 'Suggestions',
+  const toggleDarkMode = () => {
+    setIsDark(!isDark)
   }
-
-  const message = messages[location.pathname] || ''
 
   return (
     <SidebarProvider>
@@ -172,8 +185,18 @@ const AdminLayout = () => {
 
         <main className='bg-sidebar min-h-0 flex-1 overflow-y-auto'>
           <div className='bg-sidebar border-sidebar-border sticky top-0 z-10 flex items-center gap-4 divide-x border-b p-4'>
-            <SidebarTrigger className='md:hidden' />
-            <span className='font-semibold'>{message}</span>
+            <SidebarTrigger className='hover:bg-accent! hover:cursor-pointer' />
+            <button
+              onClick={toggleDarkMode}
+              className='hover:bg-accent ml-auto rounded-md p-2 transition-colors hover:cursor-pointer'
+              aria-label='Toggle dark mode'
+            >
+              {isDark ? (
+                <Sun className='h-5 w-5' />
+              ) : (
+                <Moon className='h-5 w-5' />
+              )}
+            </button>
           </div>
           <Outlet />
         </main>
