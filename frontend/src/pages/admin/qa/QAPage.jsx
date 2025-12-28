@@ -347,9 +347,9 @@ export default function QAPage() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => handleDelete(item.id)}
-                className='text-red-600'
+                className='text-destructive! hover:bg-destructive/10!'
               >
-                <Trash2 className='mr-2 h-4 w-4' />
+                <Trash2 className='text-destructive mr-2 h-4 w-4' />
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>

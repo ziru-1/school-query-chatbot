@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -186,17 +187,18 @@ const AdminLayout = () => {
         <main className='bg-sidebar min-h-0 flex-1 overflow-y-auto'>
           <div className='bg-sidebar border-sidebar-border sticky top-0 z-10 flex items-center gap-4 divide-x border-b p-4'>
             <SidebarTrigger className='hover:bg-accent! hover:cursor-pointer' />
-            <button
+            <Button
               onClick={toggleDarkMode}
-              className='hover:bg-accent ml-auto rounded-md p-2 transition-colors hover:cursor-pointer'
+              variant='ghost'
+              className='hover:bg-accent ml-auto rounded-md p-2 transition-colors'
               aria-label='Toggle dark mode'
             >
               {isDark ? (
-                <Sun className='h-5 w-5' />
+                <Sun className='size-5' />
               ) : (
-                <Moon className='h-5 w-5' />
+                <Moon className='size-5' />
               )}
-            </button>
+            </Button>
           </div>
           <Outlet />
         </main>
