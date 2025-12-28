@@ -156,6 +156,7 @@ const DataTable = ({
                       onCheckedChange={(value) =>
                         column.toggleVisibility(!!value)
                       }
+                      onSelect={(e) => e.preventDefault()}
                     >
                       {column.id}
                     </DropdownMenuCheckboxItem>
@@ -191,6 +192,7 @@ const DataTable = ({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
+                  className='even:bg-card odd:bg-muted'
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
