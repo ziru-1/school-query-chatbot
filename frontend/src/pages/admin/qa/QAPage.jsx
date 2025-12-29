@@ -20,6 +20,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useAuth } from '@/context/AuthContext'
 import { getQA } from '@/services/qa'
+import { capitalizeFirstLetter } from '@/utils/stringUtils'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -34,7 +35,14 @@ const QAPage = () => {
     const fetchQA = async () => {
       try {
         const data = await getQA(session.access_token)
-        setData(data)
+
+        const formattedData = data.map((item) => ({
+          ...item,
+          question: capitalizeFirstLetter(item.question),
+          answer: capitalizeFirstLetter(item.answer),
+        }))
+
+        setData(formattedData)
       } catch (err) {
         console.log(err)
       }
