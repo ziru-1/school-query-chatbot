@@ -5,7 +5,7 @@ import SuggestionModal from './SuggestionModal'
 
 const Navbar = () => {
   return (
-    <header className='bg-background border-accent sticky top-0 z-50 flex items-center justify-between border-b px-6 py-4 backdrop-blur-md'>
+    <header className='bg-background border-foreground/10 sticky top-0 z-50 flex items-center justify-between border-b px-6 py-4 backdrop-blur-md'>
       <Link to='/' className='transition-opacity hover:opacity-80'>
         <Logo />
       </Link>

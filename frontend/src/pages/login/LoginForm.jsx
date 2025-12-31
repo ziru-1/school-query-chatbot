@@ -31,7 +31,7 @@ const LoginForm = () => {
     }
   }
   return (
-    <div className='-translate-y-15 space-y-2 rounded-lg p-12 shadow-lg'>
+    <div className='border-bg-foreground/10 shadow-foreground/10 -translate-y-15 space-y-2 rounded-lg border p-12 shadow-lg'>
       <div className='flex justify-center'>
         <Logo />
       </div>
