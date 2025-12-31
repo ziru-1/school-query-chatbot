@@ -1,4 +1,5 @@
 import DataTable from '@/components/features/data-table/DataTable'
+import DeleteConfirmationDialog from '@/components/ui/DeleteConfirmationDialog '
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -29,6 +30,7 @@ const QAPage = () => {
   const [editingRow, setEditingRow] = useState(null)
   const [editQuestion, setEditQuestion] = useState('')
   const [editAnswer, setEditAnswer] = useState('')
+  const [deleteDialog, setDeleteDialog] = useState({ open: false, ids: [] })
   const { session } = useAuth()
 
   useEffect(() => {
@@ -73,12 +75,17 @@ const QAPage = () => {
     setEditingRow(null)
   }
 
-  const handleDelete = (id) => {
-    setData(data.filter((item) => item.id !== id))
+  const handleDeleteClick = (id) => {
+    setDeleteDialog({ open: true, ids: [id] })
   }
 
-  const handleDeleteSelected = (ids) => {
-    setData(data.filter((item) => !ids.includes(item.id)))
+  const handleDeleteSelectedClick = (ids) => {
+    setDeleteDialog({ open: true, ids })
+  }
+
+  const handleConfirmDelete = () => {
+    setData(data.filter((item) => !deleteDialog.ids.includes(item.id)))
+    setDeleteDialog({ open: false, ids: [] })
   }
 
   const columns = [
@@ -141,7 +148,7 @@ const QAPage = () => {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => handleDelete(item.id)}
+                onClick={() => handleDeleteClick(item.id)}
                 className='text-destructive! hover:bg-destructive/10!'
               >
                 <Trash2 className='text-destructive mr-2 h-4 w-4' />
@@ -194,6 +201,8 @@ const QAPage = () => {
     </Dialog>
   )
 
+  const itemCount = deleteDialog.ids.length
+
   return (
     <div className='min-w-full space-y-4 p-6'>
       <div className='flex items-center justify-between'>
@@ -204,8 +213,8 @@ const QAPage = () => {
         data={data}
         columns={columns}
         onEdit={handleEdit}
-        onDelete={handleDelete}
-        onDeleteSelected={handleDeleteSelected}
+        onDelete={handleDeleteClick}
+        onDeleteSelected={handleDeleteSelectedClick}
         searchPlaceholder='Filter questions...'
         searchKey='question'
         renderEditDialog={renderEditDialog}
@@ -213,6 +222,22 @@ const QAPage = () => {
           id: false,
           vector_id: false,
         }}
+      />
+
+      <DeleteConfirmationDialog
+        open={deleteDialog.open}
+        onOpenChange={(open) => setDeleteDialog({ open, ids: [] })}
+        onConfirm={handleConfirmDelete}
+        title={
+          itemCount === 1 ? 'Delete Q&A Pair' : 'Delete Multiple Q&A Pairs'
+        }
+        description={
+          itemCount === 1
+            ? 'You are about to permanently delete this Q&A pair. This action cannot be undone.'
+            : `You are about to permanently delete ${itemCount} Q&A pairs. This action cannot be undone.`
+        }
+        itemCount={itemCount}
+        requireTyping={itemCount > 1}
       />
     </div>
   )
