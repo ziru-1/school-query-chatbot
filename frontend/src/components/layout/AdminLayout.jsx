@@ -21,6 +21,7 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar'
 import { useAuthStore } from '@/stores/authStore'
+import { useThemeStore } from '@/stores/themeStore'
 import {
   ChevronUp,
   FileText,
@@ -32,7 +33,6 @@ import {
   User2,
   UserCog,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import { Link, Navigate, Outlet, useNavigate } from 'react-router'
 import { toast } from 'sonner'
 
@@ -68,21 +68,8 @@ const navItemsSuperadmin = [
 
 const AdminLayout = () => {
   const { session, role, loading, signOut } = useAuthStore()
+  const { isDark, toggleDark } = useThemeStore()
   const navigate = useNavigate()
-  const [isDark, setIsDark] = useState(() => {
-    const saved = localStorage.getItem('darkMode')
-    return saved === 'true'
-  })
-
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark')
-      localStorage.setItem('darkMode', 'true')
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.setItem('darkMode', 'false')
-    }
-  }, [isDark])
 
   if (loading) return null
 
@@ -96,10 +83,6 @@ const AdminLayout = () => {
       console.log('Sign out failed: ', error)
       toast.error('Could not sign out. Please try again.')
     }
-  }
-
-  const toggleDarkMode = () => {
-    setIsDark(!isDark)
   }
 
   return (
@@ -187,7 +170,7 @@ const AdminLayout = () => {
           <div className='bg-sidebar border-sidebar-border sticky top-0 z-10 flex items-center gap-4 divide-x border-b p-4'>
             <SidebarTrigger className='hover:bg-accent! hover:cursor-pointer' />
             <Button
-              onClick={toggleDarkMode}
+              onClick={toggleDark}
               variant='ghost'
               className='hover:bg-accent ml-auto rounded-md p-2 transition-colors'
               aria-label='Toggle dark mode'
