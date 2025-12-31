@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
-import { useAuth } from '@/context/AuthContext'
+import { useAuthStore } from '@/stores/authStore'
+import { useEffect } from 'react'
 
 const Dashboard = () => {
-  const { session, loading } = useAuth()
+  const { session, loading } = useAuthStore()
 
   useEffect(() => {
     console.log('Session:', session)

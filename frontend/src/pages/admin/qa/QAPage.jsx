@@ -19,8 +19,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { useAuth } from '@/context/AuthContext'
 import { getQA } from '@/services/qa'
+import { useAuthStore } from '@/stores/authStore'
 import { capitalizeFirstLetter } from '@/utils/stringUtils'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -31,7 +31,7 @@ const QAPage = () => {
   const [editQuestion, setEditQuestion] = useState('')
   const [editAnswer, setEditAnswer] = useState('')
   const [deleteDialog, setDeleteDialog] = useState({ open: false, ids: [] })
-  const { session } = useAuth()
+  const { session } = useAuthStore()
 
   useEffect(() => {
     const fetchQA = async () => {

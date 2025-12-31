@@ -1,9 +1,8 @@
-import React from 'react'
+import { useAuthStore } from '@/stores/authStore'
 import { Navigate, Outlet } from 'react-router'
-import { useAuth } from '@/context/AuthContext'
 
 const PublicLayout = () => {
-  const { session, loading } = useAuth()
+  const { session, loading } = useAuthStore()
 
   if (loading) return null
 

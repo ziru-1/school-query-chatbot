@@ -20,8 +20,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
-import { useAuth } from '@/context/AuthContext'
 import { signOut } from '@/services/auth'
+import { useAuthStore } from '@/stores/authStore'
 import {
   ChevronUp,
   FileText,
@@ -68,7 +68,7 @@ const navItemsSuperadmin = [
 ]
 
 const AdminLayout = () => {
-  const { session, role, loading } = useAuth()
+  const { session, role, loading } = useAuthStore()
   const navigate = useNavigate()
   const [isDark, setIsDark] = useState(() => {
     const saved = localStorage.getItem('darkMode')
