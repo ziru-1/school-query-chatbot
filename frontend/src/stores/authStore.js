@@ -7,10 +7,6 @@ export const useAuthStore = create((set, get) => ({
   role: null,
   loading: true,
 
-  setSession: (session) => set({ session }),
-  setRole: (role) => set({ role }),
-  setLoading: (loading) => set({ loading }),
-
   loadRole: async (userId) => {
     try {
       const { data: roleData, error: roleError } = await supabase
