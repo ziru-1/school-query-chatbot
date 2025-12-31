@@ -14,11 +14,11 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
 
   return (
     <div
-      className={`px-4 pt-4 pb-4 ${messages.length === 0 ? 'md:sticky md:-translate-y-[40vh] ' : 'sticky bottom-0'}`}
+      className={`px-4 pt-4 pb-4 ${messages.length === 0 ? 'md:sticky md:-translate-y-[40vh]' : 'sticky bottom-0'}`}
     >
       <form
         onSubmit={handleSend}
-        className='border-foreground/50 bg-background flex items-center justify-center gap-3 rounded-3xl border pr-2 shadow-lg'
+        className='border-foreground/50 bg-background relative z-20 flex items-center justify-center gap-3 rounded-3xl border pr-2 shadow-lg'
       >
         <Input
           ref={inputRef}
@@ -37,6 +37,9 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
           {isQuerying ? <Loader2 className='animate-spin' /> : <Send />}
         </Button>
       </form>
+
+      {/* Input bottom cover */}
+      <div className='bg-background absolute right-0 bottom-0 left-0 z-10 h-8'></div>
     </div>
   )
 }
