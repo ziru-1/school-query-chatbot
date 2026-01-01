@@ -22,14 +22,18 @@ import { Textarea } from '@/components/ui/textarea'
 import { getQA } from '@/services/qa'
 import { useAuthStore } from '@/stores/authStore'
 import { capitalizeFirstLetter } from '@/utils/stringUtils'
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import { FilePlusCorner, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const QAPage = () => {
   const [data, setData] = useState([])
-  const [editingRow, setEditingRow] = useState(null)
-  const [editQuestion, setEditQuestion] = useState('')
-  const [editAnswer, setEditAnswer] = useState('')
+  const [qaDialog, setQaDialog] = useState({
+    open: false,
+    mode: null,
+    item: null,
+  })
+  const [question, setQuestion] = useState('')
+  const [answer, setAnswer] = useState('')
   const [deleteDialog, setDeleteDialog] = useState({ open: false, ids: [] })
   const { session } = useAuthStore()
 
@@ -53,26 +57,53 @@ const QAPage = () => {
     fetchQA()
   }, [session.access_token])
 
-  const handleEdit = (item) => {
-    setEditingRow(item)
-    setEditQuestion(item.question)
-    setEditAnswer(item.answer)
+  const handleAddClick = () => {
+    setQaDialog({ open: true, mode: 'add', item: null })
+    setQuestion('')
+    setAnswer('')
   }
 
-  const handleSaveEdit = () => {
-    setData(
-      data.map((item) =>
-        item.id === editingRow.id
-          ? {
-              ...item,
-              question: editQuestion,
-              answer: editAnswer,
-              updated_at: new Date().toISOString(),
-            }
-          : item,
-      ),
-    )
-    setEditingRow(null)
+  const handleEditClick = (item) => {
+    setQaDialog({ open: true, mode: 'edit', item })
+    setQuestion(item.question)
+    setAnswer(item.answer)
+  }
+
+  const handleSaveQA = () => {
+    if (qaDialog.mode === 'add') {
+      // Add new QA
+      const newQA = {
+        id: Date.now(),
+        vector_id: `vec_${Date.now()}`,
+        question: capitalizeFirstLetter(question),
+        answer: capitalizeFirstLetter(answer),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }
+      setData([newQA, ...data])
+    } else {
+      // Edit existing QA
+      setData(
+        data.map((item) =>
+          item.id === qaDialog.item.id
+            ? {
+                ...item,
+                question,
+                answer,
+                updated_at: new Date().toISOString(),
+              }
+            : item,
+        ),
+      )
+    }
+
+    setQaDialog({ open: false, mode: null, item: null })
+  }
+
+  const handleCloseDialog = () => {
+    setQaDialog({ open: false, mode: null, item: null })
+    setQuestion('')
+    setAnswer('')
   }
 
   const handleDeleteClick = (id) => {
@@ -101,14 +132,14 @@ const QAPage = () => {
       accessorKey: 'question',
       header: 'Question',
       cell: ({ row }) => (
-        <div className='max-w-2xs truncate'>{row.getValue('question')}</div>
+        <div className='w-2xs truncate'>{row.getValue('question')}</div>
       ),
     },
     {
       accessorKey: 'answer',
       header: 'Answer',
       cell: ({ row }) => (
-        <div className='max-w-md truncate'>{row.getValue('answer')}</div>
+        <div className='w-md truncate'>{row.getValue('answer')}</div>
       ),
     },
     {
@@ -142,7 +173,7 @@ const QAPage = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => handleEdit(item)}>
+              <DropdownMenuItem onClick={() => handleEditClick(item)}>
                 <Pencil className='mr-2 h-4 w-4' />
                 Edit
               </DropdownMenuItem>
@@ -161,42 +192,65 @@ const QAPage = () => {
     },
   ]
 
-  const renderEditDialog = () => (
-    <Dialog open={!!editingRow} onOpenChange={() => setEditingRow(null)}>
+  const handleKeyDown = (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      e.preventDefault()
+      handleSaveQA()
+    }
+  }
+
+  const renderQADialog = () => (
+    <Dialog open={qaDialog.open} onOpenChange={handleCloseDialog}>
       <DialogContent className='sm:max-w-[600px]'>
-        <DialogHeader>
-          <DialogTitle>Edit Q&A</DialogTitle>
-          <DialogDescription>
-            Make changes to the question and answer. Click save when you're
-            done.
-          </DialogDescription>
-        </DialogHeader>
-        <div className='grid gap-4 py-4'>
-          <div className='grid gap-2'>
-            <Label htmlFor='question'>Question</Label>
-            <Textarea
-              id='question'
-              value={editQuestion}
-              onChange={(e) => setEditQuestion(e.target.value)}
-              className='min-h-20'
-            />
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            handleSaveQA()
+          }}
+          onKeyDown={handleKeyDown}
+        >
+          <DialogHeader>
+            <DialogTitle>
+              {qaDialog.mode === 'add' ? 'Add New Q&A' : 'Edit Q&A'}
+            </DialogTitle>
+            <DialogDescription>
+              {qaDialog.mode === 'add'
+                ? "Create a new question and answer pair. Click save when you're done."
+                : "Make changes to the question and answer. Click save when you're done."}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className='grid gap-4 py-4'>
+            <div className='grid gap-2'>
+              <Label htmlFor='question'>Question</Label>
+              <Textarea
+                id='question'
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                className='min-h-20'
+              />
+            </div>
+
+            <div className='grid gap-2'>
+              <Label htmlFor='answer'>Answer</Label>
+              <Textarea
+                id='answer'
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+                className='min-h-[120px]'
+              />
+            </div>
           </div>
-          <div className='grid gap-2'>
-            <Label htmlFor='answer'>Answer</Label>
-            <Textarea
-              id='answer'
-              value={editAnswer}
-              onChange={(e) => setEditAnswer(e.target.value)}
-              className='min-h-[120px]'
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant='outline' onClick={() => setEditingRow(null)}>
-            Cancel
-          </Button>
-          <Button onClick={handleSaveEdit}>Save changes</Button>
-        </DialogFooter>
+
+          <DialogFooter>
+            <Button type='button' variant='outline' onClick={handleCloseDialog}>
+              Cancel
+            </Button>
+            <Button type='submit' disabled={!question.trim() || !answer.trim()}>
+              {qaDialog.mode === 'add' ? 'Add Q&A' : 'Save changes'}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   )
@@ -205,25 +259,34 @@ const QAPage = () => {
 
   return (
     <div className='min-w-full space-y-4 p-6'>
-      <div className='flex items-center justify-between'>
-        <h1 className='text-3xl font-bold'>Q&A Management</h1>
+      <div className='flex flex-wrap items-end justify-between gap-2'>
+        <div>
+          <h2 className='text-3xl font-bold'>QA Management</h2>
+          <p className='text-muted-foreground'>
+            Manage question and answer pairs here.
+          </p>
+        </div>
+        <Button onClick={handleAddClick}>
+          Add QA <FilePlusCorner />
+        </Button>
       </div>
 
       <DataTable
         data={data}
         columns={columns}
-        onEdit={handleEdit}
+        onEdit={handleEditClick}
         onDelete={handleDeleteClick}
         onDeleteSelected={handleDeleteSelectedClick}
         searchPlaceholder='Filter questions...'
         searchKey='question'
-        renderEditDialog={renderEditDialog}
+        renderEditDialog={renderQADialog}
         initialColumnVisibility={{
           id: false,
           vector_id: false,
         }}
       />
 
+      {/* Delete Confirmation Dialog */}
       <DeleteConfirmationDialog
         open={deleteDialog.open}
         onOpenChange={(open) => setDeleteDialog({ open, ids: [] })}
