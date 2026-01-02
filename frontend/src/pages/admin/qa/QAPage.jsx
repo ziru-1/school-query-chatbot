@@ -19,14 +19,15 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { getQA } from '@/services/qa'
-import { useAuthStore } from '@/stores/authStore'
 import { capitalizeFirstLetter } from '@/utils/stringUtils'
 import { FilePlusCorner, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useQAData } from './hooks/useQAData'
 
 const QAPage = () => {
-  const [data, setData] = useState([])
+  const { data: qaData = [] } = useQAData()
+
+  const [data, setData] = useState(qaData)
   const [qaDialog, setQaDialog] = useState({
     open: false,
     mode: null,
@@ -35,27 +36,6 @@ const QAPage = () => {
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState('')
   const [deleteDialog, setDeleteDialog] = useState({ open: false, ids: [] })
-  const { session } = useAuthStore()
-
-  useEffect(() => {
-    const fetchQA = async () => {
-      try {
-        const data = await getQA(session.access_token)
-
-        const formattedData = data.map((item) => ({
-          ...item,
-          question: capitalizeFirstLetter(item.question),
-          answer: capitalizeFirstLetter(item.answer),
-        }))
-
-        setData(formattedData)
-      } catch (err) {
-        console.log(err)
-      }
-    }
-
-    fetchQA()
-  }, [session.access_token])
 
   const handleAddClick = () => {
     setQaDialog({ open: true, mode: 'add', item: null })
