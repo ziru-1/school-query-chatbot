@@ -85,6 +85,7 @@ const QAPage = () => {
       />
 
       <QAFormDialog
+        key={formDialog.item?.id || 'new'}
         open={formDialog.open}
         onOpenChange={(open) => setFormDialog({ open, item: null })}
         onSubmit={handleFormSubmit}

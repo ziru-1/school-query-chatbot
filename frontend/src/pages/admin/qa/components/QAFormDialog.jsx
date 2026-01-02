@@ -1,3 +1,4 @@
+// components/features/qa/QAFormDialog.jsx - CLEANEST SOLUTION
 import { useState } from 'react'
 import {
   Dialog,
@@ -18,24 +19,28 @@ const QAFormDialog = ({
   initialData = null,
   isSubmitting = false,
 }) => {
+  // ✅ Initialize once from initialData - no useEffect needed!
   const [question, setQuestion] = useState(initialData?.question || '')
   const [answer, setAnswer] = useState(initialData?.answer || '')
 
   const isEdit = Boolean(initialData)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    onSubmit({ question: question.trim(), answer: answer.trim() })
+    await onSubmit({
+      question: question.trim(),
+      answer: answer.trim(),
+    })
   }
 
   const handleClose = () => {
-    setQuestion('')
-    setAnswer('')
-    onOpenChange(false)
+    if (!isSubmitting) {
+      onOpenChange(false)
+    }
   }
 
   const handleKeyDown = (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && !isSubmitting) {
       e.preventDefault()
       handleSubmit(e)
     }
@@ -45,7 +50,19 @@ const QAFormDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='sm:max-w-[600px]'>
+      <DialogContent
+        className='sm:max-w-[600px]'
+        onInteractOutside={(e) => {
+          if (isSubmitting) {
+            e.preventDefault()
+          }
+        }}
+        onEscapeKeyDown={(e) => {
+          if (isSubmitting) {
+            e.preventDefault()
+          }
+        }}
+      >
         <form onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
           <DialogHeader>
             <DialogTitle>{isEdit ? 'Edit Q&A' : 'Add New Q&A'}</DialogTitle>
@@ -65,6 +82,7 @@ const QAFormDialog = ({
                 onChange={(e) => setQuestion(e.target.value)}
                 className='min-h-20'
                 autoFocus
+                disabled={isSubmitting}
               />
             </div>
 
@@ -75,6 +93,7 @@ const QAFormDialog = ({
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
                 className='min-h-[120px]'
+                disabled={isSubmitting}
               />
             </div>
           </div>
@@ -89,7 +108,16 @@ const QAFormDialog = ({
               Cancel
             </Button>
             <Button type='submit' disabled={!isValid || isSubmitting}>
-              {isSubmitting ? 'Saving...' : isEdit ? 'Save changes' : 'Add Q&A'}
+              {isSubmitting ? (
+                <>
+                  <span className='mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent' />
+                  Saving...
+                </>
+              ) : isEdit ? (
+                'Save changes'
+              ) : (
+                'Add Q&A'
+              )}
             </Button>
           </DialogFooter>
         </form>
