@@ -8,20 +8,18 @@ import { useQAData, useQAMutations } from './hooks/useQAData'
 import { createQATableColumns } from './qaTableColumns'
 
 const QAPage = () => {
-  // Data layer - no more manual state management!
   const { data = [], isLoading, error } = useQAData()
   const mutations = useQAMutations()
 
-  // UI state - minimal, focused
   const [formDialog, setFormDialog] = useState({ open: false, item: null })
   const [deleteDialog, setDeleteDialog] = useState({ open: false, ids: [] })
 
-  // Handlers - now just orchestration
   const handleAdd = () => {
     setFormDialog({ open: true, item: null })
   }
 
   const handleEdit = (item) => {
+    console.log(item)
     setFormDialog({ open: true, item })
   }
 
@@ -47,7 +45,6 @@ const QAPage = () => {
     setDeleteDialog({ open: false, ids: [] })
   }
 
-  // Column configuration - extracted for clarity
   const columns = createQATableColumns({
     onEdit: handleEdit,
     onDelete: handleDelete,
@@ -85,9 +82,8 @@ const QAPage = () => {
       />
 
       <QAFormDialog
-        key={formDialog.item?.id || 'new'}
         open={formDialog.open}
-        onOpenChange={(open) => setFormDialog({ open, item: null })}
+        onOpenChange={() => setFormDialog({ open: false, item: null })}
         onSubmit={handleFormSubmit}
         initialData={formDialog.item}
         isSubmitting={mutations.isCreating || mutations.isUpdating}

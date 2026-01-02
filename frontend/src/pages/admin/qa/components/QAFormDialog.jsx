@@ -1,5 +1,4 @@
-// components/features/qa/QAFormDialog.jsx - CLEANEST SOLUTION
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -19,11 +18,21 @@ const QAFormDialog = ({
   initialData = null,
   isSubmitting = false,
 }) => {
-  // ✅ Initialize once from initialData - no useEffect needed!
   const [question, setQuestion] = useState(initialData?.question || '')
   const [answer, setAnswer] = useState(initialData?.answer || '')
 
   const isEdit = Boolean(initialData)
+
+  useEffect(() => {
+    if (initialData) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setQuestion(initialData.question || '')
+      setAnswer(initialData.answer || '')
+    } else {
+      setQuestion('')
+      setAnswer('')
+    }
+  }, [initialData])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
