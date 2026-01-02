@@ -3,6 +3,7 @@ import DeleteConfirmationDialog from '@/pages/admin/qa/components/DeleteConfirma
 import { FilePlusCorner } from 'lucide-react'
 import { useState } from 'react'
 import DataTable from './components/DataTable'
+import QABulkActions from './components/QABulkActions'
 import QAFormDialog from './components/QAFormDialog'
 import { useQAData, useQAMutations } from './hooks/useQAData'
 import { createQATableColumns } from './qaTableColumns'
@@ -19,7 +20,6 @@ const QAPage = () => {
   }
 
   const handleEdit = (item) => {
-    console.log(item)
     setFormDialog({ open: true, item })
   }
 
@@ -72,14 +72,21 @@ const QAPage = () => {
         data={data}
         columns={columns}
         isLoading={isLoading}
-        onDeleteSelected={handleDeleteSelected}
         searchPlaceholder='Filter questions...'
         searchKey='question'
         initialColumnVisibility={{
           id: false,
           vector_id: false,
         }}
-      />
+      >
+        {({ selectedRows, clearSelection }) => (
+          <QABulkActions
+            selectedRows={selectedRows}
+            onDelete={handleDeleteSelected}
+            onClear={clearSelection}
+          />
+        )}
+      </DataTable>
 
       <QAFormDialog
         open={formDialog.open}
