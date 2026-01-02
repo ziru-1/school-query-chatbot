@@ -11,7 +11,52 @@ export const getQA = async (access_token) => {
     return response.data
   } catch (err) {
     const message =
-      err.response?.data?.error || err.message || 'Unable to fetch qa data'
+      err.response?.data?.error || err.message || 'Unable to fetch QA data'
+    throw new Error(message)
+  }
+}
+
+export const createQA = async (access_token, qaData) => {
+  try {
+    const response = await axios.post(baseUrl, qaData, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    })
+    return response.data
+  } catch (err) {
+    const message =
+      err.response?.data?.error || err.message || 'Unable to create QA'
+    throw new Error(message)
+  }
+}
+
+export const updateQA = async (access_token, qaPairId, qaData) => {
+  try {
+    const response = await axios.put(`${baseUrl}/${qaPairId}`, qaData, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    })
+    return response.data
+  } catch (err) {
+    const message =
+      err.response?.data?.error || err.message || 'Unable to update QA'
+    throw new Error(message)
+  }
+}
+
+export const deleteQA = async (access_token, qaPairId) => {
+  try {
+    const response = await axios.delete(`${baseUrl}/${qaPairId}`, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    })
+    return response.data
+  } catch (err) {
+    const message =
+      err.response?.data?.error || err.message || 'Unable to delete QA'
     throw new Error(message)
   }
 }

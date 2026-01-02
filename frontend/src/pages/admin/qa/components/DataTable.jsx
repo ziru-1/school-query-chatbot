@@ -1,4 +1,3 @@
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -37,22 +36,22 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Columns3,
+  Loader2,
   Search,
-  Trash2,
-  X,
 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
 const DataTable = ({
   data,
   columns,
-  onDeleteSelected,
+  isLoading = false,
   searchPlaceholder = 'Search...',
   searchKey,
-  renderEditDialog,
   enableSelection = true,
   enableColumnVisibility = true,
   initialColumnVisibility = {},
+  initialPageSize = 10,
+  children,
 }) => {
   const [globalFilter, setGlobalFilter] = useState('')
   const [rowSelection, setRowSelection] = useState({})
@@ -60,7 +59,6 @@ const DataTable = ({
     initialColumnVisibility,
   )
 
-  // Add selection column if enabled
   const tableColumns = useMemo(() => {
     if (!enableSelection) return columns
 
@@ -106,7 +104,6 @@ const DataTable = ({
         const value = row.getValue(searchKey)
         return String(value).toLowerCase().includes(filterValue.toLowerCase())
       }
-      // Search across all columns if no searchKey specified
       return Object.values(row.original).some((value) =>
         String(value).toLowerCase().includes(filterValue.toLowerCase()),
       )
@@ -116,9 +113,14 @@ const DataTable = ({
       globalFilter,
       columnVisibility,
     },
+    initialState: {
+      pagination: {
+        pageSize: initialPageSize,
+      },
+    },
   })
 
-  const selectedCount = table.getFilteredSelectedRowModel().rows.length
+  const selectedRows = table.getFilteredSelectedRowModel().rows
 
   return (
     <div className='space-y-4'>
@@ -187,7 +189,19 @@ const DataTable = ({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={tableColumns.length}
+                  className='h-24 text-center'
+                >
+                  <div className='flex items-center justify-center gap-2'>
+                    <Loader2 className='h-4 w-4 animate-spin' />
+                    <span>Loading...</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -286,47 +300,13 @@ const DataTable = ({
         </div>
       </div>
 
-      {/* Bulk Actions Bar */}
-      {enableSelection && selectedCount > 0 && (
-        <div className='fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-xl shadow-xl transition-all duration-300 ease-out'>
-          <div className='bg-background/95 flex items-center gap-2 rounded-xl border p-2 backdrop-blur-lg'>
-            <Button
-              variant='outline'
-              size='icon'
-              onClick={() => table.resetRowSelection()}
-              className='h-6 w-6 rounded-full'
-            >
-              <X className='h-4 w-4' />
-            </Button>
-            <div className='bg-border h-5 w-px' />
-            <div className='flex items-center gap-2 text-sm'>
-              <Badge variant='default' className='rounded-lg'>
-                {selectedCount}
-              </Badge>
-              <span>selected</span>
-            </div>
-            <div className='bg-border h-5 w-px' />
-            <Button
-              variant='destructive'
-              size='sm'
-              onClick={() => {
-                const selectedIds = table
-                  .getFilteredSelectedRowModel()
-                  .rows.map((row) => row.original.id)
-                onDeleteSelected?.(selectedIds)
-                table.resetRowSelection()
-              }}
-              className='h-8'
-            >
-              <Trash2 className='mr-2 h-4 w-4' />
-              Delete Selection
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* Edit Dialog */}
-      {renderEditDialog && renderEditDialog()}
+      {/* Bulk Actions - Rendered via children render prop */}
+      {enableSelection &&
+        selectedRows.length > 0 &&
+        children?.({
+          selectedRows,
+          clearSelection: () => table.resetRowSelection(),
+        })}
     </div>
   )
 }
