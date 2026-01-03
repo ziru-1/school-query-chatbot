@@ -4,29 +4,24 @@ import { toast } from 'sonner'
 
 export const useAuthStore = create((set, get) => ({
   session: null,
-  role: null,
+  user: null,
   loading: true,
 
-  loadRole: async (userId) => {
+  loadUser: async (userId) => {
     try {
-      const { data: roleData, error: roleError } = await supabase
+      const { data, error } = await supabase
         .from('admin_users')
-        .select('role')
+        .select('first_name, last_name, email, role')
         .eq('auth_user_id', userId)
         .single()
 
-      if (roleError) {
-        console.error('Role error:', roleError)
-        set({ role: null, loading: false })
-        toast.error('Failed to load user role')
-        return
-      }
+      if (error) throw error
 
-      set({ role: roleData.role, loading: false })
-    } catch (error) {
-      console.error('Error loading role:', error)
-      toast.error('Failed to load user role')
-      set({ role: null, loading: false })
+      set({ user: data, loading: false })
+    } catch (err) {
+      console.error('User load failed:', err)
+      toast.error('Failed to load user data')
+      set({ user: null, loading: false })
     }
   },
 
@@ -41,38 +36,36 @@ export const useAuthStore = create((set, get) => ({
 
       if (session) {
         set({ session })
-        await get().loadRole(session.user.id)
+        await get().loadUser(session.user.id)
       } else {
-        set({ session: null, role: null, loading: false })
+        set({ session: null, user: null, loading: false })
       }
     } catch (error) {
       console.error('Error fetching session:', error)
       toast.error('Failed to fetch session')
-      set({ session: null, role: null, loading: false })
+      set({ session: null, user: null, loading: false })
     }
   },
 
   initAuth: () => {
     get().loadSession()
 
-    // Set up auth state listener
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event) => {
       try {
         if (event === 'SIGNED_OUT') {
-          set({ session: null, role: null, loading: false })
+          set({ session: null, user: null, loading: false })
         } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           get().loadSession()
         }
       } catch (error) {
-        console.error('Error during auth state change:', error)
+        console.error('Auth state change error:', error)
         toast.error('Error during auth state change')
         set({ loading: false })
       }
     })
 
-    // Return cleanup function
     return () => subscription.unsubscribe()
   },
 
@@ -80,7 +73,7 @@ export const useAuthStore = create((set, get) => ({
     try {
       const { error } = await supabase.auth.signOut()
       if (error) throw error
-      set({ session: null, role: null })
+      set({ session: null, user: null })
     } catch (error) {
       console.error('Sign out error:', error)
       toast.error('Failed to sign out')
