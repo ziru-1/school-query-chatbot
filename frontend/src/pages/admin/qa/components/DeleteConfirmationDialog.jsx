@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, Loader2 } from 'lucide-react'
 
 const DeleteConfirmationDialog = ({
   open,
@@ -20,27 +20,41 @@ const DeleteConfirmationDialog = ({
   description,
   itemCount = 1,
   requireTyping = false,
+  isDeleting = false,
 }) => {
   const [confirmText, setConfirmText] = useState('')
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!requireTyping || confirmText === 'DELETE') {
-      onConfirm()
+      await onConfirm()
       setConfirmText('')
-      onOpenChange(false)
     }
   }
 
   const handleCancel = () => {
-    setConfirmText('')
-    onOpenChange(false)
+    if (!isDeleting) {
+      setConfirmText('')
+      onOpenChange(false)
+    }
   }
 
   const isConfirmValid = !requireTyping || confirmText === 'DELETE'
 
   return (
     <Dialog open={open} onOpenChange={handleCancel}>
-      <DialogContent className='sm:max-w-[425px]'>
+      <DialogContent
+        className='sm:max-w-[425px]'
+        onInteractOutside={(e) => {
+          if (isDeleting) {
+            e.preventDefault()
+          }
+        }}
+        onEscapeKeyDown={(e) => {
+          if (isDeleting) {
+            e.preventDefault()
+          }
+        }}
+      >
         <DialogHeader>
           <div className='flex items-center gap-2'>
             <div className='bg-destructive/10 text-destructive flex h-10 w-10 items-center justify-center rounded-full'>
@@ -67,20 +81,32 @@ const DeleteConfirmationDialog = ({
                 placeholder='DELETE'
                 className='font-mono'
                 autoComplete='off'
+                disabled={isDeleting}
               />
             </div>
           </div>
         )}
         <DialogFooter>
-          <Button variant='outline' onClick={handleCancel}>
+          <Button
+            variant='outline'
+            onClick={handleCancel}
+            disabled={isDeleting}
+          >
             Cancel
           </Button>
           <Button
             variant='destructive'
             onClick={handleConfirm}
-            disabled={!isConfirmValid}
+            disabled={!isConfirmValid || isDeleting}
           >
-            Delete {itemCount > 1 ? `${itemCount} Items` : 'Item'}
+            {isDeleting ? (
+              <>
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                Deleting...
+              </>
+            ) : (
+              <>Delete {itemCount > 1 ? `${itemCount} Items` : 'Item'}</>
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

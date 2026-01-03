@@ -359,8 +359,8 @@ export const useQAMutations = () => {
       }
 
       queryClient.setQueryData(QA_QUERY_KEY, (old = []) => [
-        ...old,
         formatQAItem(newItem),
+        ...old,
       ])
 
       return newItem
@@ -395,6 +395,8 @@ export const useQAMutations = () => {
         return deleteQA(session.access_token, ids)
       }
 
+      await sleep(2000)
+
       const idsToDelete = Array.isArray(ids) ? ids : [ids]
 
       queryClient.setQueryData(QA_QUERY_KEY, (old = []) =>
@@ -404,9 +406,9 @@ export const useQAMutations = () => {
   })
 
   return {
-    create: createMutation.mutate,
-    update: updateMutation.mutate,
-    delete: deleteMutation.mutate,
+    create: createMutation.mutateAsync,
+    update: updateMutation.mutateAsync,
+    delete: deleteMutation.mutateAsync,
     isCreating: createMutation.isPending,
     isUpdating: updateMutation.isPending,
     isDeleting: deleteMutation.isPending,

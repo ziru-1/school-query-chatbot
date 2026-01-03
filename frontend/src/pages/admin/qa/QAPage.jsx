@@ -23,13 +23,17 @@ const QAPage = () => {
     setFormDialog({ open: true, item })
   }
 
-  const handleFormSubmit = (formData) => {
-    if (formDialog.item) {
-      mutations.update({ id: formDialog.item.id, data: formData })
-    } else {
-      mutations.create(formData)
+  const handleFormSubmit = async (formData) => {
+    try {
+      if (formDialog.item) {
+        await mutations.update({ id: formDialog.item.id, data: formData })
+      } else {
+        await mutations.create(formData)
+      }
+      setFormDialog({ open: false, item: null })
+    } catch (error) {
+      console.error('Failed to save QA:', error)
     }
-    setFormDialog({ open: false, item: null })
   }
 
   const handleDelete = (id) => {
@@ -40,9 +44,13 @@ const QAPage = () => {
     setDeleteDialog({ open: true, ids })
   }
 
-  const handleConfirmDelete = () => {
-    mutations.delete(deleteDialog.ids)
-    setDeleteDialog({ open: false, ids: [] })
+  const handleConfirmDelete = async () => {
+    try {
+      await mutations.delete(deleteDialog.ids)
+      setDeleteDialog({ open: false, ids: [] })
+    } catch (error) {
+      console.error('Failed to delete QA:', error)
+    }
   }
 
   const columns = createQATableColumns({
@@ -112,6 +120,7 @@ const QAPage = () => {
         }
         itemCount={deleteDialog.ids.length}
         requireTyping={deleteDialog.ids.length > 1}
+        isDeleting={mutations.isDeleting}
       />
     </div>
   )
