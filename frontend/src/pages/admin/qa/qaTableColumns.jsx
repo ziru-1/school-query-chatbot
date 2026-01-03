@@ -70,8 +70,6 @@ export const createQATableColumns = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='start'>
-              <DropdownMenuLabel>Sort by Created At</DropdownMenuLabel>
-              <DropdownMenuSeparator />
               <DropdownMenuRadioGroup
                 value={isActive ? sortConfig.order : ''}
                 onValueChange={(order) => onSort('created_at', order)}
@@ -119,8 +117,6 @@ export const createQATableColumns = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='start'>
-              <DropdownMenuLabel>Sort by Updated At</DropdownMenuLabel>
-              <DropdownMenuSeparator />
               <DropdownMenuRadioGroup
                 value={isActive ? sortConfig.order : ''}
                 onValueChange={(order) => onSort('updated_at', order)}
