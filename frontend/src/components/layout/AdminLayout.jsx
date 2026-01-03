@@ -67,7 +67,7 @@ const navItemsSuperadmin = [
 ]
 
 const AdminLayout = () => {
-  const { session, role, loading, signOut } = useAuthStore()
+  const { session, user, loading, signOut } = useAuthStore()
   const { isDark, toggleDark } = useThemeStore()
   const navigate = useNavigate()
 
@@ -102,7 +102,7 @@ const AdminLayout = () => {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {navItemsCommon
-                    .filter((item) => item.roles.includes(role))
+                    .filter((item) => item.roles.includes(user.role))
                     .map((item) => (
                       <SidebarMenuItem key={item.href}>
                         <SidebarMenuButton asChild>
@@ -120,7 +120,7 @@ const AdminLayout = () => {
               </SidebarGroupContent>
             </SidebarGroup>
 
-            {role === 'superadmin' && (
+            {user.role === 'superadmin' && (
               <SidebarGroup>
                 <SidebarGroupLabel>Admin Management</SidebarGroupLabel>
                 <SidebarGroupContent>
@@ -147,10 +147,17 @@ const AdminLayout = () => {
           <SidebarFooter>
             <DropdownMenu>
               <DropdownMenuTrigger asChild className='cursor-pointer'>
-                <SidebarMenuButton>
-                  <User2 />
-                  <span>{session.user.email}</span>
-                  <ChevronUp className='ml-auto' />
+                <SidebarMenuButton className='h-auto py-2'>
+                  <User2 className='h-5 w-5 shrink-0' />
+                  <div className='flex min-w-0 flex-1 flex-col items-start gap-0.5 overflow-hidden'>
+                    <span className='w-full truncate text-sm font-medium'>
+                      {user.first_name} {user.last_name}
+                    </span>
+                    <span className='text-muted-foreground w-full truncate text-xs'>
+                      {user.email}
+                    </span>
+                  </div>
+                  <ChevronUp className='ml-auto h-4 w-4 shrink-0' />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent side='top' className='w-68 md:w-60'>
