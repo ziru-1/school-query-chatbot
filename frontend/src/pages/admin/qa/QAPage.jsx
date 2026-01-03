@@ -1,7 +1,8 @@
+// QAPage.jsx - WITH SORTING
 import { Button } from '@/components/ui/button'
 import DeleteConfirmationDialog from '@/pages/admin/qa/components/DeleteConfirmationDialog'
 import { FilePlusCorner } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import DataTable from './components/DataTable'
 import QABulkActions from './components/QABulkActions'
 import QAFormDialog from './components/QAFormDialog'
@@ -14,6 +15,33 @@ const QAPage = () => {
 
   const [formDialog, setFormDialog] = useState({ open: false, item: null })
   const [deleteDialog, setDeleteDialog] = useState({ open: false, ids: [] })
+
+  // ✅ Add sorting state (initial: created_at, newest first)
+  const [sortConfig, setSortConfig] = useState({
+    field: 'created_at',
+    order: 'desc', // 'desc' = newest first, 'asc' = oldest first
+  })
+
+  // ✅ Sort data based on current sort config
+  const sortedData = useMemo(() => {
+    if (!data.length) return data
+
+    return [...data].sort((a, b) => {
+      const aValue = new Date(a[sortConfig.field]).getTime()
+      const bValue = new Date(b[sortConfig.field]).getTime()
+
+      if (sortConfig.order === 'desc') {
+        return bValue - aValue // Newest first
+      } else {
+        return aValue - bValue // Oldest first
+      }
+    })
+  }, [data, sortConfig])
+
+  // ✅ Handle sort changes
+  const handleSort = (field, order) => {
+    setSortConfig({ field, order })
+  }
 
   const handleAdd = () => {
     setFormDialog({ open: true, item: null })
@@ -53,13 +81,25 @@ const QAPage = () => {
     }
   }
 
+  // ✅ Pass sort config and handler to columns
   const columns = createQATableColumns({
     onEdit: handleEdit,
     onDelete: handleDelete,
+    sortConfig,
+    onSort: handleSort,
   })
 
   if (error) {
-    return <div>Error loading QA data: {error.message}</div>
+    return (
+      <div className='min-w-full space-y-4 p-6'>
+        <div className='border-destructive bg-destructive/10 rounded-lg border p-4'>
+          <h3 className='text-destructive font-semibold'>
+            Error Loading QA Data
+          </h3>
+          <p className='text-destructive/80 text-sm'>{error.message}</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -76,8 +116,9 @@ const QAPage = () => {
         </Button>
       </div>
 
+      {/* ✅ Use sortedData instead of data */}
       <DataTable
-        data={data}
+        data={sortedData}
         columns={columns}
         isLoading={isLoading}
         searchPlaceholder='Filter questions...'

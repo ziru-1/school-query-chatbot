@@ -1,15 +1,30 @@
+// qaTableColumns.jsx - WITH SORTABLE DATE COLUMNS
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+} from 'lucide-react'
 
-export const createQATableColumns = ({ onEdit, onDelete }) => [
+export const createQATableColumns = ({
+  onEdit,
+  onDelete,
+  sortConfig,
+  onSort,
+}) => [
   {
     accessorKey: 'id',
     header: 'ID',
@@ -22,7 +37,7 @@ export const createQATableColumns = ({ onEdit, onDelete }) => [
     accessorKey: 'question',
     header: 'Question',
     cell: ({ row }) => (
-      <div className='w-2xs truncate'>{row.getValue('question')}</div>
+      <div className='w-3xs truncate'>{row.getValue('question')}</div>
     ),
   },
   {
@@ -34,22 +49,105 @@ export const createQATableColumns = ({ onEdit, onDelete }) => [
   },
   {
     accessorKey: 'created_at',
-    header: 'Created At',
+    header: () => {
+      const isActive = sortConfig.field === 'created_at'
+      const isNewest = sortConfig.order === 'desc'
+
+      return (
+        <div className='text-center'>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost' className='hover:bg-accent h-8 px-2'>
+                <span>Created At</span>
+                {isActive ? (
+                  isNewest ? (
+                    <ArrowDown className='h-4 w-4' />
+                  ) : (
+                    <ArrowUp className='h-4 w-4' />
+                  )
+                ) : (
+                  <ArrowUpDown className='h-4 w-4 opacity-40' />
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='start'>
+              <DropdownMenuLabel>Sort by Created At</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuRadioGroup
+                value={isActive ? sortConfig.order : ''}
+                onValueChange={(order) => onSort('created_at', order)}
+              >
+                <DropdownMenuRadioItem value='desc'>
+                  <ArrowDown className='mr-2 h-4 w-4' />
+                  Newest First
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value='asc'>
+                  <ArrowUp className='mr-2 h-4 w-4' />
+                  Oldest First
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )
+    },
     cell: ({ row }) => {
       const date = new Date(row.getValue('created_at'))
-      return date.toLocaleDateString()
+      return <div className='text-center'>{date.toLocaleDateString()}</div>
     },
   },
   {
     accessorKey: 'updated_at',
-    header: 'Updated At',
+    header: () => {
+      const isActive = sortConfig.field === 'updated_at'
+      const isNewest = sortConfig.order === 'desc'
+
+      return (
+        <div className='text-center'>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost' className='hover:bg-accent h-8 px-2'>
+                <span>Updated At</span>
+                {isActive ? (
+                  isNewest ? (
+                    <ArrowDown className='h-4 w-4' />
+                  ) : (
+                    <ArrowUp className='h-4 w-4' />
+                  )
+                ) : (
+                  <ArrowUpDown className='h-4 w-4 opacity-40' />
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='start'>
+              <DropdownMenuLabel>Sort by Updated At</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuRadioGroup
+                value={isActive ? sortConfig.order : ''}
+                onValueChange={(order) => onSort('updated_at', order)}
+              >
+                <DropdownMenuRadioItem value='desc'>
+                  <ArrowDown className='mr-2 h-4 w-4' />
+                  Newest First
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value='asc'>
+                  <ArrowUp className='mr-2 h-4 w-4' />
+                  Oldest First
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )
+    },
     cell: ({ row }) => {
       const date = new Date(row.getValue('updated_at'))
-      return date.toLocaleDateString()
+      return <div className='text-center'>{date.toLocaleDateString()}</div>
     },
   },
   {
     id: 'actions',
+    minSize: 30,
     cell: ({ row }) => {
       const item = row.original
 
