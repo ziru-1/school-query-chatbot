@@ -1,4 +1,3 @@
-// qaTableColumns.jsx - WITH SORTABLE DATE COLUMNS
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,

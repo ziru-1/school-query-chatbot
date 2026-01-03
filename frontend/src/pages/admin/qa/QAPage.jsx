@@ -1,4 +1,3 @@
-// QAPage.jsx - WITH SORTING
 import { Button } from '@/components/ui/button'
 import DeleteConfirmationDialog from '@/pages/admin/qa/components/DeleteConfirmationDialog'
 import { FilePlusCorner } from 'lucide-react'
@@ -16,13 +15,11 @@ const QAPage = () => {
   const [formDialog, setFormDialog] = useState({ open: false, item: null })
   const [deleteDialog, setDeleteDialog] = useState({ open: false, ids: [] })
 
-  // ✅ Add sorting state (initial: created_at, newest first)
   const [sortConfig, setSortConfig] = useState({
     field: 'created_at',
-    order: 'desc', // 'desc' = newest first, 'asc' = oldest first
+    order: 'desc',
   })
 
-  // ✅ Sort data based on current sort config
   const sortedData = useMemo(() => {
     if (!data.length) return data
 
@@ -31,14 +28,13 @@ const QAPage = () => {
       const bValue = new Date(b[sortConfig.field]).getTime()
 
       if (sortConfig.order === 'desc') {
-        return bValue - aValue // Newest first
+        return bValue - aValue
       } else {
-        return aValue - bValue // Oldest first
+        return aValue - bValue
       }
     })
   }, [data, sortConfig])
 
-  // ✅ Handle sort changes
   const handleSort = (field, order) => {
     setSortConfig({ field, order })
   }
@@ -81,7 +77,6 @@ const QAPage = () => {
     }
   }
 
-  // ✅ Pass sort config and handler to columns
   const columns = createQATableColumns({
     onEdit: handleEdit,
     onDelete: handleDelete,
@@ -116,7 +111,6 @@ const QAPage = () => {
         </Button>
       </div>
 
-      {/* ✅ Use sortedData instead of data */}
       <DataTable
         data={sortedData}
         columns={columns}
