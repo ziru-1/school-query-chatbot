@@ -110,13 +110,13 @@ const QAPage = () => {
         onConfirm={handleConfirmDelete}
         title={
           deleteDialog.ids.length === 1
-            ? 'Delete Q&A Pair'
-            : 'Delete Multiple Q&A Pairs'
+            ? 'Delete QA Pair'
+            : 'Delete Multiple QA Pairs'
         }
         description={
           deleteDialog.ids.length === 1
-            ? 'You are about to permanently delete this Q&A pair. This action cannot be undone.'
-            : `You are about to permanently delete ${deleteDialog.ids.length} Q&A pairs. This action cannot be undone.`
+            ? 'You are about to permanently delete this QA pair. This action cannot be undone.'
+            : `You are about to permanently delete ${deleteDialog.ids.length} QA pairs. This action cannot be undone.`
         }
         itemCount={deleteDialog.ids.length}
         requireTyping={deleteDialog.ids.length > 1}

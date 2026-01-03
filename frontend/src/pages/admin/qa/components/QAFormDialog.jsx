@@ -24,15 +24,12 @@ const QAFormDialog = ({
   const isEdit = Boolean(initialData)
 
   useEffect(() => {
-    if (initialData) {
+    if (open) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setQuestion(initialData.question || '')
-      setAnswer(initialData.answer || '')
-    } else {
-      setQuestion('')
-      setAnswer('')
+      setQuestion(initialData?.question || '')
+      setAnswer(initialData?.answer || '')
     }
-  }, [initialData])
+  }, [open, initialData])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -74,7 +71,7 @@ const QAFormDialog = ({
       >
         <form onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
           <DialogHeader>
-            <DialogTitle>{isEdit ? 'Edit Q&A' : 'Add New Q&A'}</DialogTitle>
+            <DialogTitle>{isEdit ? 'Edit QA' : 'Add New QA'}</DialogTitle>
             <DialogDescription>
               {isEdit
                 ? "Make changes to the question and answer. Click save when you're done."
@@ -125,7 +122,7 @@ const QAFormDialog = ({
               ) : isEdit ? (
                 'Save changes'
               ) : (
-                'Add Q&A'
+                'Add QA'
               )}
             </Button>
           </DialogFooter>
