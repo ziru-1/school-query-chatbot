@@ -8,8 +8,3 @@ export const signInWithEmail = async (email, password) => {
   if (error) throw error
   return data
 }
-
-export const signOut = async () => {
-  const { error } = await supabase.auth.signOut()
-  if (error) throw error
-}
