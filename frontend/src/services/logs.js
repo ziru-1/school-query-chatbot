@@ -25,7 +25,7 @@ export const getLogs = async () => {
     updated_at: row.updated_at,
     actor_name: row.actor_admin
       ? `${row.actor_admin.first_name} ${row.actor_admin.last_name}`
-      : null,
+      : 'Admin',
   }))
 
   return formatted
