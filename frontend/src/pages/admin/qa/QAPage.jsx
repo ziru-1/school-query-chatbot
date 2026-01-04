@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react'
 import DataTable from './components/DataTable'
 import QABulkActions from './components/QABulkActions'
 import QAFormDialog from './components/QAFormDialog'
+import QAViewDialog from './components/QAViewDialog'
 import { useQAData, useQAMutations } from './hooks/useQAData'
 import { createQATableColumns } from './qaTableColumns'
 import { toast } from 'sonner'
@@ -15,6 +16,7 @@ const QAPage = () => {
 
   const [formDialog, setFormDialog] = useState({ open: false, item: null })
   const [deleteDialog, setDeleteDialog] = useState({ open: false, ids: [] })
+  const [viewDialog, setViewDialog] = useState({ open: false, item: null })
 
   const [sortConfig, setSortConfig] = useState({
     field: 'created_at',
@@ -46,6 +48,10 @@ const QAPage = () => {
 
   const handleEdit = (item) => {
     setFormDialog({ open: true, item })
+  }
+
+  const handleRowClick = (item) => {
+    setViewDialog({ open: true, item })
   }
 
   const handleFormSubmit = async (formData) => {
@@ -118,6 +124,7 @@ const QAPage = () => {
         isLoading={isLoading}
         searchPlaceholder='Filter questions...'
         searchKey='question'
+        onRowClick={handleRowClick}
         initialColumnVisibility={{
           id: false,
           vector_id: false,
@@ -138,6 +145,12 @@ const QAPage = () => {
         onSubmit={handleFormSubmit}
         initialData={formDialog.item}
         isSubmitting={mutations.isCreating || mutations.isUpdating}
+      />
+
+      <QAViewDialog
+        open={viewDialog.open}
+        onOpenChange={(open) => setViewDialog({ open, item: null })}
+        qaItem={viewDialog.item}
       />
 
       <DeleteConfirmationDialog

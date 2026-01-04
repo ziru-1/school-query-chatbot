@@ -53,6 +53,7 @@ const DataTable = ({
   enableColumnVisibility = true,
   initialColumnVisibility = {},
   initialPageSize = 10,
+  onRowClick,
   children,
 }) => {
   const [globalFilter, setGlobalFilter] = useState('')
@@ -215,10 +216,21 @@ const DataTable = ({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  className='even:bg-card odd:bg-muted'
+                  className='even:bg-card odd:bg-muted cursor-pointer'
+                  onClick={() => onRowClick?.(row.original)}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      onClick={(e) => {
+                        if (
+                          cell.column.id === 'actions' ||
+                          cell.column.id === 'select'
+                        ) {
+                          e.stopPropagation()
+                        }
+                      }}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
