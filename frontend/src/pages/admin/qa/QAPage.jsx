@@ -7,6 +7,7 @@ import QABulkActions from './components/QABulkActions'
 import QAFormDialog from './components/QAFormDialog'
 import { useQAData, useQAMutations } from './hooks/useQAData'
 import { createQATableColumns } from './qaTableColumns'
+import { toast } from 'sonner'
 
 const QAPage = () => {
   const { data = [], isLoading, error } = useQAData()
@@ -56,7 +57,7 @@ const QAPage = () => {
       }
       setFormDialog({ open: false, item: null })
     } catch (error) {
-      console.error('Failed to save QA:', error)
+      toast.error(`${error}`)
     }
   }
 

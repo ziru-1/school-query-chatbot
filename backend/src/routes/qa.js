@@ -33,9 +33,21 @@ router.post('/', verifyAdmin, async (req, res) => {
     })
   } catch (err) {
     console.error(err)
-    res.status(500).json({
-      error: err.message || 'Server error',
-    })
+    if (err.statusCode === 429 || err.statusText === 'Too Many Requests') {
+      return res.status(429).json({
+        error:
+          err.body?.message ||
+          'Too many requests, please wait and try again later',
+      })
+    }
+
+    if (err.statusCode === 402) {
+      return res.status(402).json({
+        error: err.body?.message || 'Monthly limit reached',
+      })
+    }
+
+    return res.status(500).json({ error: err.message || 'Server error' })
   }
 })
 
@@ -114,7 +126,21 @@ router.put('/:qaPairId', verifyAdmin, async (req, res) => {
     })
   } catch (err) {
     console.error(err)
-    res.status(500).json({ error: 'Server error' })
+    if (err.statusCode === 429 || err.statusText === 'Too Many Requests') {
+      return res.status(429).json({
+        error:
+          err.body?.message ||
+          'Too many requests, please wait and try again later',
+      })
+    }
+
+    if (err.statusCode === 402) {
+      return res.status(402).json({
+        error: err.body?.message || 'Monthly limit reached',
+      })
+    }
+
+    return res.status(500).json({ error: err.message || 'Server error' })
   }
 })
 
