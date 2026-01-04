@@ -1,6 +1,8 @@
-import { create } from 'zustand'
+import { queryClient } from '@/lib/react-query-client'
 import { supabase } from '@/lib/supabase'
+import { QA_LOGS_QUERY_KEY } from '@/pages/admin/qa/hooks/useQALogs'
 import { toast } from 'sonner'
+import { create } from 'zustand'
 
 export const useAuthStore = create((set, get) => ({
   session: null,
@@ -74,6 +76,7 @@ export const useAuthStore = create((set, get) => ({
       const { error } = await supabase.auth.signOut()
       if (error) throw error
       set({ session: null, user: null })
+      queryClient.removeQueries({ queryKey: QA_LOGS_QUERY_KEY, exact: true })
     } catch (error) {
       console.error('Sign out error:', error)
       toast.error('Failed to sign out')
