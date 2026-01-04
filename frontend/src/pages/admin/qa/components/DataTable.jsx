@@ -31,6 +31,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import {
+  Activity,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
@@ -40,6 +41,7 @@ import {
   Search,
 } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import LogsDialog from './LogsDialog'
 
 const DataTable = ({
   data,
@@ -58,6 +60,7 @@ const DataTable = ({
   const [columnVisibility, setColumnVisibility] = useState(
     initialColumnVisibility,
   )
+  const [logsDialogOpen, setLogsDialogOpen] = useState(false)
 
   const tableColumns = useMemo(() => {
     if (!enableSelection) return columns
@@ -137,6 +140,12 @@ const DataTable = ({
             />
           </div>
         </div>
+
+        <Button variant='outline' onClick={() => setLogsDialogOpen(true)}>
+          <Activity />
+          Logs
+        </Button>
+
         {enableColumnVisibility && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -307,6 +316,10 @@ const DataTable = ({
           selectedRows,
           clearSelection: () => table.resetRowSelection(),
         })}
+
+      {logsDialogOpen && (
+        <LogsDialog open={logsDialogOpen} onOpenChange={setLogsDialogOpen} />
+      )}
     </div>
   )
 }
