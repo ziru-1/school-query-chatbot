@@ -32,6 +32,7 @@ import {
 } from '@tanstack/react-table'
 import {
   Activity,
+  AlertTriangle,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
@@ -47,6 +48,7 @@ const DataTable = ({
   data,
   columns,
   isLoading = false,
+  error,
   searchPlaceholder = 'Search...',
   searchKey,
   enableSelection = true,
@@ -199,7 +201,27 @@ const DataTable = ({
             ))}
           </TableHeader>
           <TableBody>
-            {isLoading ? (
+            {error ? (
+              <TableRow>
+                <TableCell
+                  colSpan={tableColumns.length}
+                  className='h-[400px] p-0'
+                >
+                  <div className='flex h-full flex-col items-center justify-center p-8'>
+                    <div className='bg-destructive/10 flex h-12 w-12 items-center justify-center rounded-full'>
+                      <AlertTriangle className='text-destructive h-6 w-6' />
+                    </div>
+                    <h3 className='text-destructive mt-4 text-lg font-semibold'>
+                      Error Loading Data
+                    </h3>
+                    <p className='text-muted-foreground mt-2 max-w-md text-center text-sm'>
+                      {error.message ||
+                        'An unexpected error occurred while loading the data.'}
+                    </p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : isLoading ? (
               <TableRow>
                 <TableCell
                   colSpan={tableColumns.length}

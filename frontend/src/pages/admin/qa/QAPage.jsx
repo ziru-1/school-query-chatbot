@@ -91,19 +91,6 @@ const QAPage = () => {
     onSort: handleSort,
   })
 
-  if (error) {
-    return (
-      <div className='min-w-full space-y-4 p-6'>
-        <div className='border-destructive bg-destructive/10 rounded-lg border p-4'>
-          <h3 className='text-destructive font-semibold'>
-            Error Loading QA Data
-          </h3>
-          <p className='text-destructive/80 text-sm'>{error.message}</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className='min-w-full space-y-4 p-6'>
       <div className='flex flex-wrap items-end justify-between gap-2'>
@@ -122,6 +109,7 @@ const QAPage = () => {
         data={sortedData}
         columns={columns}
         isLoading={isLoading}
+        error={error}
         searchPlaceholder='Filter questions...'
         searchKey='question'
         onRowClick={handleRowClick}
