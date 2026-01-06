@@ -30,14 +30,14 @@ export const createSuggestionsTableColumns = ({
     accessorKey: 'question',
     header: 'Question',
     cell: ({ row }) => (
-      <div className='min-w-2xs truncate'>{row.getValue('question')}</div>
+      <div className='w-2xs truncate'>{row.getValue('question')}</div>
     ),
   },
   {
     accessorKey: 'context',
     header: 'Context',
     cell: ({ row }) => (
-      <div className='text-muted-foreground min-w-3xs truncate text-sm'>
+      <div className='text-muted-foreground w-3xs truncate text-sm'>
         {row.getValue('context') || '-'}
       </div>
     ),
