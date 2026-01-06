@@ -7,7 +7,7 @@ import AdminLayout from './components/layout/AdminLayout'
 import PublicLayout from './components/layout/PublicLayout'
 import Dashboard from './pages/admin/dashboard/Dashboard'
 import QAPage from './pages/admin/qa/QAPage'
-import Suggestions from './pages/admin/suggestions/Suggestions'
+import SuggestionsPage from './pages/admin/suggestions/SuggestionsPage'
 
 const App = () => {
   return (
@@ -29,7 +29,7 @@ const App = () => {
         <Route element={<AdminLayout />}>
           <Route path='/admin/dashboard' element={<Dashboard />} />
           <Route path='/admin/qa' element={<QAPage />} />
-          <Route path='/admin/suggestions' element={<Suggestions />} />
+          <Route path='/admin/suggestions' element={<SuggestionsPage />} />
         </Route>
 
         <Route path='*' element={<NotFound />} />
