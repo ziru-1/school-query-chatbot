@@ -3,8 +3,8 @@ import { toast } from 'sonner'
 import DataTable from './components/DataTable'
 import SuggestionViewDialog from './components/SuggestionViewDialog'
 import {
-  useSuggestionMutations,
   useSuggestionsData,
+  useSuggestionMutations,
 } from './hooks/useSuggestionsData'
 import { createSuggestionsTableColumns } from './suggestionsTableColumns'
 
@@ -84,8 +84,8 @@ const SuggestionsPage = () => {
         columns={columns}
         isLoading={isLoading}
         error={error}
-        searchPlaceholder='Filter questions...'
-        searchKey='question'
+        searchPlaceholder='Filter by ID...'
+        searchKey='id'
         onRowClick={handleRowClick}
         statusFilter={statusFilter}
         onStatusFilterChange={setStatusFilter}

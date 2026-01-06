@@ -1,4 +1,3 @@
-// pages/admin/suggestions/components/DataTable.jsx
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
