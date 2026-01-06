@@ -20,14 +20,15 @@ export const useSuggestionMutations = () => {
   const [updatingId, setUpdatingId] = useState(null)
 
   const updateMutation = useMutation({
-    mutationFn: ({ suggestionId, newStatus }) => {
+    mutationFn: async ({ suggestionId, newStatus }) => {
       setUpdatingId(suggestionId)
-      return updateSuggestionStatus(suggestionId, newStatus)
+      return await updateSuggestionStatus(suggestionId, newStatus)
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: SUGGESTIONS_QUERY_KEY })
+    onSuccess: async () => {
+      await queryClient.refetchQueries({ queryKey: SUGGESTIONS_QUERY_KEY })
+      setUpdatingId(null)
     },
-    onSettled: () => {
+    onError: () => {
       setUpdatingId(null)
     },
   })
