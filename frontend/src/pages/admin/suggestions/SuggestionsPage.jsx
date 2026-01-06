@@ -2,11 +2,15 @@
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import DataTable from './components/DataTable'
-import { useSuggestionsData } from './hooks/useSuggestionsData'
+import {
+  useSuggestionsData,
+  useSuggestionMutations,
+} from './hooks/useSuggestionsData'
 import { createSuggestionsTableColumns } from './suggestionsTableColumns'
 
 const SuggestionsPage = () => {
   const { data = [], isLoading, error } = useSuggestionsData()
+  const mutations = useSuggestionMutations()
 
   // const [viewDialog, setViewDialog] = useState({ open: false, item: null })
   const [statusFilter, setStatusFilter] = useState('all')
@@ -43,14 +47,17 @@ const SuggestionsPage = () => {
   }
 
   const handleRowClick = (item) => {
+    // Prevent row click when updating
+    if (mutations.updatingId === item.id) return
     setViewDialog({ open: true, item })
   }
 
   const handleStatusChange = async (id, newStatus) => {
     try {
+      await mutations.update({ suggestionId: id, newStatus })
       toast.success(`Suggestion ${newStatus}`)
     } catch (error) {
-      toast.error(`Failed to update status: ${error}`)
+      toast.error(`Failed to update status: ${error.message || error}`)
     }
   }
 
@@ -58,6 +65,7 @@ const SuggestionsPage = () => {
     onStatusChange: handleStatusChange,
     sortConfig,
     onSort: handleSort,
+    updatingId: mutations.updatingId,
   })
 
   return (

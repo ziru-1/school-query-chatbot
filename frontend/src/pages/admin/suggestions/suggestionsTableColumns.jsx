@@ -14,13 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react'
+import { ArrowDown, ArrowUp, ArrowUpDown, Loader2 } from 'lucide-react'
 import StatusBadge from './components/StatusBadge'
 
 export const createSuggestionsTableColumns = ({
   onStatusChange,
   sortConfig,
   onSort,
+  updatingId,
 }) => [
   {
     accessorKey: 'id',
@@ -48,16 +49,25 @@ export const createSuggestionsTableColumns = ({
     cell: ({ row }) => {
       const item = row.original
       const status = row.getValue('status')
+      const isUpdating = updatingId === item.id
 
       return (
         <Select
           value={status}
           onValueChange={(value) => onStatusChange(item.id, value)}
+          disabled={isUpdating}
         >
           <SelectTrigger className='w-[130px]'>
-            <SelectValue>
-              <StatusBadge status={status} />
-            </SelectValue>
+            {isUpdating ? (
+              <div className='flex items-center gap-2'>
+                <Loader2 className='h-4 w-4 animate-spin' />
+                <span className='text-sm'>Updating...</span>
+              </div>
+            ) : (
+              <SelectValue>
+                <StatusBadge status={status} />
+              </SelectValue>
+            )}
           </SelectTrigger>
           <SelectContent>
             <SelectItem value='pending'>

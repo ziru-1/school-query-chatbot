@@ -1,5 +1,6 @@
-import { getSuggestions } from '@/services/suggestions'
-import { useQuery } from '@tanstack/react-query'
+import { getSuggestions, updateSuggestionStatus } from '@/services/suggestions'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
 
 export const SUGGESTIONS_QUERY_KEY = ['suggestions']
 
@@ -12,4 +13,28 @@ export const useSuggestionsData = () => {
     },
     staleTime: 5 * 60 * 1000,
   })
+}
+
+export const useSuggestionMutations = () => {
+  const queryClient = useQueryClient()
+  const [updatingId, setUpdatingId] = useState(null)
+
+  const updateMutation = useMutation({
+    mutationFn: ({ suggestionId, newStatus }) => {
+      setUpdatingId(suggestionId)
+      return updateSuggestionStatus(suggestionId, newStatus)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: SUGGESTIONS_QUERY_KEY })
+    },
+    onSettled: () => {
+      setUpdatingId(null)
+    },
+  })
+
+  return {
+    update: updateMutation.mutateAsync,
+    isUpdating: updateMutation.isPending,
+    updatingId,
+  }
 }
