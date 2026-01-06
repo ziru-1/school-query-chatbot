@@ -30,12 +30,15 @@ const SuggestionViewDialog = ({ open, onOpenChange, suggestion }) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='max-w-2xl' aria-describedby={undefined}>
+      <DialogContent
+        className='flex max-h-[90vh] max-w-2xl flex-col'
+        aria-describedby={undefined}
+      >
         <DialogHeader>
           <DialogTitle>Suggestion Details</DialogTitle>
         </DialogHeader>
 
-        <div className='space-y-6'>
+        <div className='space-y-6 overflow-y-auto pr-2'>
           {/* Status Section */}
           <div className='space-y-2'>
             <h3 className='text-muted-foreground text-sm font-semibold'>

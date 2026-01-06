@@ -29,12 +29,15 @@ const QAViewDialog = ({ open, onOpenChange, qaItem }) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='max-w-2xl'>
+      <DialogContent
+        className='flex max-h-[90vh] max-w-2xl flex-col'
+        aria-describedby={undefined}
+      >
         <DialogHeader>
           <DialogTitle>QA Pair Details</DialogTitle>
         </DialogHeader>
 
-        <div className='space-y-6'>
+        <div className='space-y-6 overflow-y-auto pr-2'>
           {/* Question Section */}
           <div className='space-y-2'>
             <h3 className='text-muted-foreground text-sm font-semibold'>
