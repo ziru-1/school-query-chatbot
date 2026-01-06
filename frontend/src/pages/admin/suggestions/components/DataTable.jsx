@@ -44,6 +44,7 @@ import {
 } from 'lucide-react'
 import { useMemo } from 'react'
 import { useState } from 'react'
+import SuggestionsLogsDialog from './SuggestionsLogsDialog'
 
 const DataTable = ({
   data,
@@ -63,7 +64,7 @@ const DataTable = ({
   const [columnVisibility, setColumnVisibility] = useState(
     initialColumnVisibility,
   )
-  // const [logsDialogOpen, setLogsDialogOpen] = useState(false)
+  const [logsDialogOpen, setLogsDialogOpen] = useState(false)
 
   const tableColumns = useMemo(() => columns, [columns])
 
@@ -129,7 +130,7 @@ const DataTable = ({
           )}
         </div>
 
-        <Button variant='outline'>
+        <Button variant='outline' onClick={() => setLogsDialogOpen(true)}>
           <Activity />
           Logs
         </Button>
@@ -325,9 +326,12 @@ const DataTable = ({
         </div>
       </div>
 
-      {/* {logsDialogOpen && (
-        <LogsDialog open={logsDialogOpen} onOpenChange={setLogsDialogOpen} />
-      )} */}
+      {logsDialogOpen && (
+        <SuggestionsLogsDialog
+          open={logsDialogOpen}
+          onOpenChange={setLogsDialogOpen}
+        />
+      )}
     </div>
   )
 }
