@@ -20,6 +20,7 @@ export const createSuggestionsLogsTableColumns = (sortConfig, handleSort) => [
       <div className='truncate font-mono text-xs'>{row.getValue('id')}</div>
     ),
   },
+
   {
     accessorKey: 'actor_name',
     header: 'Actor Name',
@@ -27,6 +28,16 @@ export const createSuggestionsLogsTableColumns = (sortConfig, handleSort) => [
     cell: ({ row }) => (
       <div className='w-[150px]'>
         <div className='truncate text-sm'>{row.getValue('actor_name')}</div>
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'question_suggestion_id',
+    header: 'Suggestion ID',
+    size: 150,
+    cell: ({ row }) => (
+      <div className='truncate font-mono text-xs'>
+        {row.getValue('question_suggestion_id') || '-'}
       </div>
     ),
   },
@@ -58,16 +69,7 @@ export const createSuggestionsLogsTableColumns = (sortConfig, handleSort) => [
       return status ? <StatusBadge status={status} /> : <span>-</span>
     },
   },
-  {
-    accessorKey: 'question_suggestion_id',
-    header: 'Suggestion ID',
-    size: 150,
-    cell: ({ row }) => (
-      <div className='truncate font-mono text-xs'>
-        {row.getValue('question_suggestion_id') || '-'}
-      </div>
-    ),
-  },
+
   {
     accessorKey: 'changed_at',
     header: () => {

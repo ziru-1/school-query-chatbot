@@ -50,7 +50,6 @@ const SuggestionsLogsDialog = ({ open, onOpenChange }) => {
 
   const [columnVisibility, setColumnVisibility] = useState({
     id: false,
-    question_suggestion_id: false,
   })
 
   const [sortConfig, setSortConfig] = useState({
