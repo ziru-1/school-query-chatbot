@@ -1,4 +1,3 @@
-// pages/admin/suggestions/suggestionsTableColumns.jsx
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -31,14 +30,14 @@ export const createSuggestionsTableColumns = ({
     accessorKey: 'question',
     header: 'Question',
     cell: ({ row }) => (
-      <div className='max-w-md truncate'>{row.getValue('question')}</div>
+      <div className='min-w-2xs truncate'>{row.getValue('question')}</div>
     ),
   },
   {
     accessorKey: 'context',
     header: 'Context',
     cell: ({ row }) => (
-      <div className='text-muted-foreground max-w-sm truncate text-sm'>
+      <div className='text-muted-foreground min-w-3xs truncate text-sm'>
         {row.getValue('context') || '-'}
       </div>
     ),
@@ -57,7 +56,7 @@ export const createSuggestionsTableColumns = ({
           onValueChange={(value) => onStatusChange(item.id, value)}
           disabled={isUpdating}
         >
-          <SelectTrigger className='w-[130px]'>
+          <SelectTrigger className='w-[130px] cursor-pointer bg-inherit! p-1!'>
             {isUpdating ? (
               <div className='flex items-center gap-2'>
                 <Loader2 className='h-4 w-4 animate-spin' />

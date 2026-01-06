@@ -1,10 +1,10 @@
-// pages/admin/suggestions/SuggestionsPage.jsx
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import DataTable from './components/DataTable'
+import SuggestionViewDialog from './components/SuggestionViewDialog'
 import {
-  useSuggestionsData,
   useSuggestionMutations,
+  useSuggestionsData,
 } from './hooks/useSuggestionsData'
 import { createSuggestionsTableColumns } from './suggestionsTableColumns'
 
@@ -12,7 +12,7 @@ const SuggestionsPage = () => {
   const { data = [], isLoading, error } = useSuggestionsData()
   const mutations = useSuggestionMutations()
 
-  // const [viewDialog, setViewDialog] = useState({ open: false, item: null })
+  const [viewDialog, setViewDialog] = useState({ open: false, item: null })
   const [statusFilter, setStatusFilter] = useState('all')
 
   const [sortConfig, setSortConfig] = useState({
@@ -91,11 +91,11 @@ const SuggestionsPage = () => {
         onStatusFilterChange={setStatusFilter}
       />
 
-      {/* <SuggestionViewDialog
+      <SuggestionViewDialog
         open={viewDialog.open}
         onOpenChange={(open) => setViewDialog({ open, item: null })}
         suggestion={viewDialog.item}
-      /> */}
+      />
     </div>
   )
 }
