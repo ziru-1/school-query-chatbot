@@ -4,7 +4,7 @@ import AdminLayout from './components/layout/AdminLayout'
 import ProtectedRoute from './components/layout/ProtectedRoute'
 import PublicLayout from './components/layout/PublicLayout'
 import Dashboard from './pages/admin/dashboard/Dashboard'
-import ManageAdmins from './pages/admin/manage-admins/ManageAdmins'
+import ManageAdminsPage from './pages/admin/manage-admins/ManageAdminsPage'
 import QAPage from './pages/admin/qa/QAPage'
 import SuggestionsPage from './pages/admin/suggestions/SuggestionsPage'
 import ChatPage from './pages/chat/ChatPage'
@@ -37,7 +37,7 @@ const App = () => {
             path='/admin/manage-admins'
             element={
               <ProtectedRoute allowedRoles={['superadmin']}>
-                <ManageAdmins />
+                <ManageAdminsPage />
               </ProtectedRoute>
             }
           />
