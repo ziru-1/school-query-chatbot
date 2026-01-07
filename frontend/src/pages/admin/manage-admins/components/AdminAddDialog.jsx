@@ -10,48 +10,49 @@ import {
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
-const AdminFormDialog = ({
+const AdminAddDialog = ({
   open,
   onOpenChange,
   onSubmit,
-  initialData = null,
   isSubmitting = false,
 }) => {
-  const [email, setEmail] = useState(initialData?.email || '')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [firstName, setFirstName] = useState(initialData?.first_name || '')
-  const [lastName, setLastName] = useState(initialData?.last_name || '')
-  const [department, setDepartment] = useState(initialData?.department || '')
-
-  const isEdit = Boolean(initialData)
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [department, setDepartment] = useState('')
+  const [role, setRole] = useState('admin')
 
   useEffect(() => {
     if (open) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setEmail(initialData?.email || '')
+      setEmail('')
       setPassword('')
-      setFirstName(initialData?.first_name || '')
-      setLastName(initialData?.last_name || '')
-      setDepartment(initialData?.department || '')
+      setFirstName('')
+      setLastName('')
+      setDepartment('')
+      setRole('admin')
     }
-  }, [open, initialData])
+  }, [open])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const formData = {
+    await onSubmit({
       email: email.trim(),
+      password: password.trim(),
       first_name: firstName.trim(),
       last_name: lastName.trim(),
       department: department.trim(),
-    }
-
-    // Only include password if it's provided (for both create and edit)
-    if (password.trim()) {
-      formData.password = password.trim()
-    }
-
-    await onSubmit(formData)
+      role: role,
+    })
   }
 
   const handleClose = () => {
@@ -69,10 +70,10 @@ const AdminFormDialog = ({
 
   const isValid =
     email.trim() &&
+    password.trim() &&
     firstName.trim() &&
     lastName.trim() &&
-    department.trim() &&
-    (!isEdit ? password.trim() : true) // Password required for create, optional for edit
+    department.trim()
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -91,11 +92,9 @@ const AdminFormDialog = ({
       >
         <form onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
           <DialogHeader>
-            <DialogTitle>{isEdit ? 'Edit Admin' : 'Add New Admin'}</DialogTitle>
+            <DialogTitle>Add New Admin</DialogTitle>
             <DialogDescription>
-              {isEdit
-                ? 'Update admin details. Leave password blank to keep current password.'
-                : 'Create a new admin user. Fill in all required fields.'}
+              Create a new admin user. Fill in all required fields.
             </DialogDescription>
           </DialogHeader>
 
@@ -114,17 +113,13 @@ const AdminFormDialog = ({
             </div>
 
             <div className='grid gap-2'>
-              <Label htmlFor='password'>
-                Password {isEdit ? '(leave blank to keep current)' : '*'}
-              </Label>
+              <Label htmlFor='password'>Password *</Label>
               <Input
                 id='password'
                 type='password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder={
-                  isEdit ? 'Leave blank to keep current' : 'Enter password'
-                }
+                placeholder='Enter password'
                 disabled={isSubmitting}
               />
             </div>
@@ -163,6 +158,23 @@ const AdminFormDialog = ({
                 disabled={isSubmitting}
               />
             </div>
+
+            <div className='grid gap-2'>
+              <Label htmlFor='role'>Role *</Label>
+              <Select
+                value={role}
+                onValueChange={setRole}
+                disabled={isSubmitting}
+              >
+                <SelectTrigger id='role'>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='admin'>Admin</SelectItem>
+                  <SelectItem value='superadmin'>Superadmin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <DialogFooter>
@@ -178,10 +190,8 @@ const AdminFormDialog = ({
               {isSubmitting ? (
                 <>
                   <span className='mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent' />
-                  Saving...
+                  Creating...
                 </>
-              ) : isEdit ? (
-                'Save changes'
               ) : (
                 'Add Admin'
               )}
@@ -193,4 +203,4 @@ const AdminFormDialog = ({
   )
 }
 
-export default AdminFormDialog
+export default AdminAddDialog

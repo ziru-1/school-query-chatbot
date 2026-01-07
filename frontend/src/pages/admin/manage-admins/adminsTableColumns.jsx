@@ -14,6 +14,7 @@ import {
   ArrowDown,
   ArrowUp,
   ArrowUpDown,
+  KeyRound,
   MoreHorizontal,
   Pencil,
   Trash2,
@@ -21,6 +22,7 @@ import {
 
 export const createAdminsTableColumns = ({
   onEdit,
+  onResetPassword,
   onDelete,
   sortConfig,
   onSort,
@@ -139,6 +141,10 @@ export const createAdminsTableColumns = ({
             <DropdownMenuItem onClick={() => onEdit(item)}>
               <Pencil className='mr-2 h-4 w-4' />
               Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onResetPassword(item)}>
+              <KeyRound className='mr-2 h-4 w-4' />
+              Reset Password
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem

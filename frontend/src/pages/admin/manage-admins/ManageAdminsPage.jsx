@@ -4,7 +4,9 @@ import { UserPlus } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import DataTable from './components/DataTable'
-import AdminFormDialog from './components/AdminFormDialog'
+import AdminAddDialog from './components/AdminAddDialog'
+import AdminEditDialog from './components/AdminEditDialog'
+import ResetPasswordDialog from './components/ResetPasswordDialog'
 import AdminViewDialog from './components/AdminViewDialog'
 import { useAdminsData, useAdminsMutations } from './hooks/useAdminsData'
 import { createAdminsTableColumns } from './adminsTableColumns'
@@ -13,7 +15,12 @@ const ManageAdminsPage = () => {
   const { data = [], isLoading, error } = useAdminsData()
   const mutations = useAdminsMutations()
 
-  const [formDialog, setFormDialog] = useState({ open: false, item: null })
+  const [formDialog, setFormDialog] = useState({ open: false })
+  const [editDialog, setEditDialog] = useState({ open: false, item: null })
+  const [resetPasswordDialog, setResetPasswordDialog] = useState({
+    open: false,
+    item: null,
+  })
   const [deleteDialog, setDeleteDialog] = useState({ open: false, id: null })
   const [viewDialog, setViewDialog] = useState({ open: false, item: null })
 
@@ -42,11 +49,15 @@ const ManageAdminsPage = () => {
   }
 
   const handleAdd = () => {
-    setFormDialog({ open: true, item: null })
+    setFormDialog({ open: true })
   }
 
   const handleEdit = (item) => {
-    setFormDialog({ open: true, item })
+    setEditDialog({ open: true, item })
+  }
+
+  const handleResetPassword = (item) => {
+    setResetPasswordDialog({ open: true, item })
   }
 
   const handleRowClick = (item) => {
@@ -55,17 +66,35 @@ const ManageAdminsPage = () => {
 
   const handleFormSubmit = async (formData) => {
     try {
-      if (formDialog.item) {
-        await mutations.update({
-          id: formDialog.item.auth_user_id,
-          data: formData,
-        })
-        toast.success('Admin updated successfully')
-      } else {
-        await mutations.create(formData)
-        toast.success('Admin created successfully')
-      }
-      setFormDialog({ open: false, item: null })
+      await mutations.create(formData)
+      toast.success('Admin created successfully')
+      setFormDialog({ open: false })
+    } catch (error) {
+      toast.error(`Failed: ${error.message || error}`)
+    }
+  }
+
+  const handleEditSubmit = async (formData) => {
+    try {
+      await mutations.update({
+        id: editDialog.item.auth_user_id,
+        updates: formData,
+      })
+      toast.success('Admin updated successfully')
+      setEditDialog({ open: false, item: null })
+    } catch (error) {
+      toast.error(`Failed: ${error.message || error}`)
+    }
+  }
+
+  const handleResetPasswordSubmit = async (newPassword) => {
+    try {
+      await mutations.resetPassword({
+        id: resetPasswordDialog.item.auth_user_id,
+        newPassword,
+      })
+      toast.success('Password reset successfully')
+      setResetPasswordDialog({ open: false, item: null })
     } catch (error) {
       toast.error(`Failed: ${error.message || error}`)
     }
@@ -87,6 +116,7 @@ const ManageAdminsPage = () => {
 
   const columns = createAdminsTableColumns({
     onEdit: handleEdit,
+    onResetPassword: handleResetPassword,
     onDelete: handleDelete,
     sortConfig,
     onSort: handleSort,
@@ -119,12 +149,27 @@ const ManageAdminsPage = () => {
         }}
       />
 
-      <AdminFormDialog
+      <AdminAddDialog
         open={formDialog.open}
-        onOpenChange={() => setFormDialog({ open: false, item: null })}
+        onOpenChange={() => setFormDialog({ open: false })}
         onSubmit={handleFormSubmit}
-        initialData={formDialog.item}
-        isSubmitting={mutations.isCreating || mutations.isUpdating}
+        isSubmitting={mutations.isCreating}
+      />
+
+      <AdminEditDialog
+        open={editDialog.open}
+        onOpenChange={() => setEditDialog({ open: false, item: null })}
+        onSubmit={handleEditSubmit}
+        initialData={editDialog.item}
+        isSubmitting={mutations.isUpdating}
+      />
+
+      <ResetPasswordDialog
+        open={resetPasswordDialog.open}
+        onOpenChange={() => setResetPasswordDialog({ open: false, item: null })}
+        onSubmit={handleResetPasswordSubmit}
+        admin={resetPasswordDialog.item}
+        isSubmitting={mutations.isResettingPassword}
       />
 
       <AdminViewDialog
