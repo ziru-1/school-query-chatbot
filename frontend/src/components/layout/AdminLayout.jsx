@@ -60,7 +60,7 @@ const navItemsCommon = [
 const navItemsSuperadmin = [
   {
     label: 'Manage Admins',
-    href: '/admin/manage',
+    href: '/admin/manage-admins',
     icon: <UserCog />,
     roles: ['superadmin'],
   },
