@@ -55,7 +55,7 @@ export const verifySuperAdmin = async (req, res, next) => {
       .eq('auth_user_id', user.id)
       .single()
 
-    if (adminError || !admin || admin.role !== 'super_admin') {
+    if (adminError || !admin || admin.role !== 'superadmin') {
       return res.status(403).json({ error: 'Not allowed' })
     }
 
