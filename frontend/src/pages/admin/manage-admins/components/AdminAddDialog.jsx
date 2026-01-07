@@ -68,9 +68,14 @@ const AdminAddDialog = ({
     }
   }
 
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
+
   const isValid =
     email.trim() &&
-    password.trim() &&
+    isValidEmail(email) &&
+    password.trim().length >= 8 &&
     firstName.trim() &&
     lastName.trim() &&
     department.trim()
@@ -109,7 +114,15 @@ const AdminAddDialog = ({
                 placeholder='admin@example.com'
                 autoFocus
                 disabled={isSubmitting}
+                className={
+                  email && !isValidEmail(email) ? 'border-destructive' : ''
+                }
               />
+              {email && !isValidEmail(email) && (
+                <p className='text-destructive text-xs'>
+                  Please enter a valid email address
+                </p>
+              )}
             </div>
 
             <div className='grid gap-2'>
@@ -121,7 +134,15 @@ const AdminAddDialog = ({
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder='Enter password'
                 disabled={isSubmitting}
+                className={
+                  password && password.length < 8 ? 'border-destructive' : ''
+                }
               />
+              {password && password.length < 8 && (
+                <p className='text-destructive text-xs'>
+                  Password must be at least 8 characters long
+                </p>
+              )}
             </div>
 
             <div className='grid grid-cols-2 gap-4'>

@@ -51,11 +51,12 @@ const ResetPasswordDialog = ({
   }
 
   const isValid =
-    newPassword.trim() &&
+    newPassword.trim().length >= 8 &&
     confirmPassword.trim() &&
     newPassword === confirmPassword
 
   const passwordsMatch = !confirmPassword || newPassword === confirmPassword
+  const isPasswordLongEnough = !newPassword || newPassword.length >= 8
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -104,7 +105,17 @@ const ResetPasswordDialog = ({
                 placeholder='Enter new password'
                 autoFocus
                 disabled={isSubmitting}
+                className={
+                  newPassword && !isPasswordLongEnough
+                    ? 'border-destructive'
+                    : ''
+                }
               />
+              {newPassword && !isPasswordLongEnough && (
+                <p className='text-destructive text-xs'>
+                  Password must be at least 8 characters long
+                </p>
+              )}
             </div>
 
             <div className='grid gap-2'>
