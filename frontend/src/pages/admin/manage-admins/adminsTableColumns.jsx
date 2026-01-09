@@ -40,26 +40,32 @@ export const createAdminsTableColumns = ({
     accessorKey: 'first_name',
     header: 'First Name',
     cell: ({ row }) => (
-      <div className='font-medium'>{row.getValue('first_name')}</div>
+      <div className='w-40 truncate font-medium'>
+        {row.getValue('first_name')}
+      </div>
     ),
   },
   {
     accessorKey: 'last_name',
     header: 'Last Name',
     cell: ({ row }) => (
-      <div className='font-medium'>{row.getValue('last_name')}</div>
+      <div className='w-40 truncate font-medium'>
+        {row.getValue('last_name')}
+      </div>
     ),
   },
   {
     accessorKey: 'email',
     header: 'Email',
-    cell: ({ row }) => <div className='text-sm'>{row.getValue('email')}</div>,
+    cell: ({ row }) => (
+      <div className='w-40 truncate text-sm'>{row.getValue('email')}</div>
+    ),
   },
   {
     accessorKey: 'department',
     header: 'Department',
     cell: ({ row }) => (
-      <div className='text-sm'>{row.getValue('department')}</div>
+      <div className='w-40 truncate text-sm'>{row.getValue('department')}</div>
     ),
   },
   {
