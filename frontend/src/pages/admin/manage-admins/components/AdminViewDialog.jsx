@@ -54,7 +54,7 @@ const AdminViewDialog = ({ open, onOpenChange, admin }) => {
             </h3>
             <div className='bg-muted/50 flex items-center gap-2 rounded-lg border p-4'>
               <User className='text-muted-foreground h-5 w-5' />
-              <p className='text-lg font-medium'>
+              <p className='text-sm'>
                 {admin.first_name} {admin.last_name}
               </p>
             </div>
