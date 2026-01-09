@@ -7,7 +7,10 @@ const router = express.Router()
 const ALLOWED_ROLES = ['admin', 'superadmin']
 
 router.get('/', verifySuperAdmin, async (req, res) => {
-  const { data, error } = await supabase.from('admin_users').select('*')
+  const { data, error } = await supabase
+    .from('admin_users')
+    .select('*')
+    .eq('is_deleted', false)
 
   if (error) return res.status(500).json({ error: error.message })
 
@@ -151,14 +154,17 @@ router.patch('/:id', verifySuperAdmin, async (req, res) => {
 
 router.delete('/:id', verifySuperAdmin, async (req, res) => {
   // Prevent superadmin from deleting themselves
-  if (req.user?.id === req.params.id) {
+  if (req.admin?.auth_user_id === req.params.id) {
     return res.status(400).json({
       error: 'You cannot delete your own account',
     })
   }
 
-  const { error: authError } = await supabase.auth.admin.deleteUser(
-    req.params.id
+  const { error: authError } = await supabase.auth.admin.updateUserById(
+    req.params.id,
+    {
+      ban_duration: '876600h',
+    }
   )
 
   if (authError) {
@@ -167,7 +173,7 @@ router.delete('/:id', verifySuperAdmin, async (req, res) => {
 
   const { error: dbError } = await supabase
     .from('admin_users')
-    .delete()
+    .update({ is_deleted: true })
     .eq('auth_user_id', req.params.id)
 
   if (dbError) {
