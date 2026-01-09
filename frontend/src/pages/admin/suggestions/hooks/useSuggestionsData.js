@@ -1,5 +1,6 @@
 import { getSuggestions, updateSuggestionStatus } from '@/services/suggestions'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { SUGGESTION_LOGS_QUERY_KEY } from './useSuggestionsLogs'
 import { useState } from 'react'
 
 export const SUGGESTIONS_QUERY_KEY = ['suggestions']
@@ -26,6 +27,7 @@ export const useSuggestionMutations = () => {
     },
     onSuccess: async () => {
       await queryClient.refetchQueries({ queryKey: SUGGESTIONS_QUERY_KEY })
+      await queryClient.refetchQueries({ queryKey: SUGGESTION_LOGS_QUERY_KEY })
       setUpdatingId(null)
     },
     onError: () => {
