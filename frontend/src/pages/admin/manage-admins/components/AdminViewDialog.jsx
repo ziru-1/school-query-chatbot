@@ -87,8 +87,12 @@ const AdminViewDialog = ({ open, onOpenChange, admin }) => {
               </h3>
               <div className='bg-muted/50 rounded-lg border p-4'>
                 <Badge
-                  variant={
-                    admin.role === 'superadmin' ? 'default' : 'secondary'
+                  className={
+                    admin.role === 'superadmin'
+                      ? 'bg-black text-white dark:bg-black dark:text-white'
+                      : admin.role === 'admin'
+                        ? 'bg-gray-300 text-black dark:bg-gray-300 dark:text-black'
+                        : 'bg-gray-200 text-black dark:bg-gray-200 dark:text-black'
                   }
                 >
                   {admin.role}

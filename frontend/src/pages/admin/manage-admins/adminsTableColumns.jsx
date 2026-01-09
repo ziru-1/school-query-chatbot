@@ -68,7 +68,15 @@ export const createAdminsTableColumns = ({
     cell: ({ row }) => {
       const role = row.getValue('role')
       return (
-        <Badge variant={role === 'superadmin' ? 'default' : 'secondary'}>
+        <Badge
+          className={
+            role === 'superadmin'
+              ? 'bg-black text-white dark:bg-black dark:text-white'
+              : role === 'admin'
+                ? 'bg-gray-300 text-black dark:bg-gray-300 dark:text-black'
+                : 'bg-gray-200 text-black dark:bg-gray-200 dark:text-black'
+          }
+        >
           {role}
         </Badge>
       )

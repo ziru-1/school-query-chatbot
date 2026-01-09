@@ -41,8 +41,8 @@ import {
   Loader2,
   Search,
 } from 'lucide-react'
-import { useMemo } from 'react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import StatusBadge from './StatusBadge'
 import SuggestionsLogsDialog from './SuggestionsLogsDialog'
 
 const DataTable = ({
@@ -120,10 +120,18 @@ const DataTable = ({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>All Status</SelectItem>
-                <SelectItem value='pending'>Pending</SelectItem>
-                <SelectItem value='accepted'>Accepted</SelectItem>
-                <SelectItem value='rejected'>Rejected</SelectItem>
+                <SelectItem value='all' className='ml-1'>
+                  All Status
+                </SelectItem>
+                <SelectItem value='pending'>
+                  <StatusBadge status='pending' />
+                </SelectItem>
+                <SelectItem value='accepted'>
+                  <StatusBadge status='accepted' />
+                </SelectItem>
+                <SelectItem value='rejected'>
+                  <StatusBadge status='rejected' />
+                </SelectItem>
               </SelectContent>
             </Select>
           )}
