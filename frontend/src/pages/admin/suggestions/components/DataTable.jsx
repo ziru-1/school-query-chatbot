@@ -157,7 +157,7 @@ const DataTable = ({
                       }
                       onSelect={(e) => e.preventDefault()}
                     >
-                      {column.id}
+                      {column.id.replace(/_/g, ' ')}
                     </DropdownMenuCheckboxItem>
                   )
                 })}
