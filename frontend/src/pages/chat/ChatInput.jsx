@@ -1,16 +1,45 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Send, Loader2 } from 'lucide-react'
+import { Send, Loader2, Mic, MicOff } from 'lucide-react'
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from 'react-speech-recognition'
 
 const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
   const [input, setInput] = useState('')
+
+  const {
+    transcript,
+    resetTranscript,
+    listening,
+    browserSupportsSpeechRecognition,
+    isMicrophoneAvailable,
+  } = useSpeechRecognition()
+
+  useEffect(() => {
+    if (transcript) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setInput(transcript)
+    }
+  }, [transcript])
+
+  const toggleListening = (e) => {
+    e.preventDefault()
+    if (listening) {
+      SpeechRecognition.stopListening()
+    }
+    resetTranscript()
+    SpeechRecognition.startListening({ continuous: true })
+  }
 
   const handleSend = (e) => {
     e.preventDefault()
     onSend(input)
     setInput('')
   }
+
+  const showMicButton = listening || !input.trim()
 
   return (
     <div
@@ -28,14 +57,26 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
           onChange={(e) => setInput(e.target.value)}
           className='text-md border-0 bg-transparent! py-6 pl-6 shadow-none focus-visible:ring-0'
         />
-        <Button
-          type='submit'
-          className='cursor-pointer rounded-l-xl rounded-r-3xl pr-0.5'
-          size='icon'
-          disabled={isQuerying || !input.trim()}
-        >
-          {isQuerying ? <Loader2 className='animate-spin' /> : <Send />}
-        </Button>
+        {showMicButton ? (
+          <Button
+            type='button'
+            onClick={toggleListening}
+            className={`cursor-pointer rounded-l-xl rounded-r-3xl pr-0.5 ${listening ? 'bg-red-600 hover:bg-red-700' : ''}`}
+            size='icon'
+            disabled={isQuerying}
+          >
+            {listening ? <MicOff className='animate-pulse' /> : <Mic />}
+          </Button>
+        ) : (
+          <Button
+            type='submit'
+            className='cursor-pointer rounded-l-xl rounded-r-3xl pr-0.5'
+            size='icon'
+            disabled={isQuerying || !input.trim()}
+          >
+            {isQuerying ? <Loader2 className='animate-spin' /> : <Send />}
+          </Button>
+        )}
       </form>
 
       {/* Input bottom cover */}
