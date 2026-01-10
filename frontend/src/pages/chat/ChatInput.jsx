@@ -40,6 +40,13 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
   }
 
   const showMicButton = listening || !input.trim()
+  const micDisabled =
+    !(browserSupportsSpeechRecognition && isMicrophoneAvailable) || isQuerying
+  const micTitle = !browserSupportsSpeechRecognition
+    ? 'Speech recognition not supported in this browser'
+    : !isMicrophoneAvailable
+      ? 'Microphone access is blocked'
+      : undefined
 
   return (
     <div
@@ -58,15 +65,17 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
           className='text-md border-0 bg-transparent! py-6 pl-6 shadow-none focus-visible:ring-0'
         />
         {showMicButton ? (
-          <Button
-            type='button'
-            onClick={toggleListening}
-            className={`cursor-pointer rounded-l-xl rounded-r-3xl pr-0.5 ${listening ? 'bg-red-600 hover:bg-red-700' : ''}`}
-            size='icon'
-            disabled={isQuerying}
-          >
-            {listening ? <MicOff className='animate-pulse' /> : <Mic />}
-          </Button>
+          <span title={micTitle}>
+            <Button
+              type='button'
+              onClick={toggleListening}
+              className={`cursor-pointer rounded-l-xl rounded-r-3xl pr-0.5 ${listening ? 'bg-red-600 hover:bg-red-700' : ''}`}
+              size='icon'
+              disabled={micDisabled}
+            >
+              {listening ? <MicOff className='animate-pulse' /> : <Mic />}
+            </Button>
+          </span>
         ) : (
           <Button
             type='submit'
