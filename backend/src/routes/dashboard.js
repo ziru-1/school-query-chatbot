@@ -9,7 +9,7 @@ router.get('/', verifyAdmin, async (req, res) => {
     suggestions_limit: parseInt(req.query.suggestionsLimit) || 10,
     activity_limit: parseInt(req.query.activityLimit) || 10,
     low_conf_limit: parseInt(req.query.lowConfLimit) || 10,
-    confidence_threshold: parseFloat(req.query.threshold) || 0.7,
+    confidence_threshold: parseFloat(req.query.threshold) || 0.55,
     chat_days: parseInt(req.query.days) || 30,
   })
 
