@@ -1,3 +1,4 @@
+import StatusBadge from '@/components/badges/StatusBadge'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -14,7 +15,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { ArrowDown, ArrowUp, ArrowUpDown, Loader2 } from 'lucide-react'
-import StatusBadge from './components/StatusBadge'
 
 export const createSuggestionsTableColumns = ({
   onStatusChange,

@@ -1,3 +1,4 @@
+import StatusBadge from '@/components/badges/StatusBadge'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -8,7 +9,6 @@ import {
 import { Calendar, Check, ChevronDown, ChevronUp, Copy } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import StatusBadge from './StatusBadge'
 
 const SuggestionViewDialog = ({ open, onOpenChange, suggestion }) => {
   const [showAdvanced, setShowAdvanced] = useState(false)

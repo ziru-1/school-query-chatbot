@@ -1,3 +1,4 @@
+import StatusBadge from '@/components/badges/StatusBadge'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -42,7 +43,6 @@ import {
   Search,
 } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import StatusBadge from './StatusBadge'
 import SuggestionsLogsDialog from './SuggestionsLogsDialog'
 
 const DataTable = ({
