@@ -119,7 +119,7 @@ router.patch('/:id', verifySuperAdmin, async (req, res) => {
   }
 
   // prevent superadmin from demoting themselves
-  if (req.user?.id === id && role && role !== 'superadmin') {
+  if (req.admin?.auth_user_id === id && role && role !== 'superadmin') {
     return res.status(400).json({
       error: 'You cannot change your own role',
     })
