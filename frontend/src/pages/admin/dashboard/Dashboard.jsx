@@ -1,18 +1,48 @@
-import { useAuthStore } from '@/stores/authStore'
-import { useEffect } from 'react'
+import ChartsRow from './components/ChartsRow'
+import DashboardError from './components/DashboardError'
+import DashboardLoading from './components/DashboardLoading'
+import LowConfidenceTable from './components/LowConfidenceTable'
+import MetricsCards from './components/MetricsCards'
+import RecentsTables from './components/RecentsTables'
 import { useDashboardData } from './hooks/useDashboardData'
 
 const Dashboard = () => {
-  const { data = [], isLoading, error } = useDashboardData()
-  const { session, loading } = useAuthStore()
+  const { data, isLoading, error } = useDashboardData()
 
-  useEffect(() => {
-    console.log('data', data)
-    console.log('Session:', session)
-    console.log('Loading:', loading)
-  }, [session, loading, data])
+  if (isLoading) return <DashboardLoading />
+  if (error) return <DashboardError />
 
-  return <div>Dashboard</div>
+  const metrics = data?.metrics || {}
+  const recentSuggestions = data?.recentSuggestions || []
+  const recentQAActivity = data?.recentQAActivity || []
+  const lowConfidenceQueries = data?.lowConfidenceQueries || []
+  const chatActivity = data?.chatActivity || []
+
+  return (
+    <div className='space-y-6 p-6'>
+      {/* Header */}
+      <div>
+        <h2 className='text-3xl font-bold'>Dashboard</h2>
+        <p className='text-muted-foreground'>
+          Overview of your system activity and metrics
+        </p>
+      </div>
+
+      <MetricsCards metrics={metrics} />
+
+      <ChartsRow
+        suggestionDistribution={metrics.suggestionDistribution}
+        chatActivity={chatActivity}
+      />
+
+      <RecentsTables
+        recentSuggestions={recentSuggestions}
+        recentQAActivity={recentQAActivity}
+      />
+
+      <LowConfidenceTable lowConfidenceQueries={lowConfidenceQueries} />
+    </div>
+  )
 }
 
 export default Dashboard
