@@ -50,6 +50,7 @@ const ChatInterface = () => {
           }),
         },
       ])
+      setIsQuerying(false)
     } catch (err) {
       toast.error(err?.message || 'Something went wrong')
       setIsQuerying(false)
@@ -64,6 +65,7 @@ const ChatInterface = () => {
         sendMessage={sendMessage}
         setIsQuerying={setIsQuerying}
         messages={messages}
+        isQuerying={isQuerying}
       />
 
       <ChatInput

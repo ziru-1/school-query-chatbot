@@ -83,7 +83,7 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
             size='icon'
             disabled={isQuerying || !input.trim()}
           >
-            {isQuerying ? <Loader2 className='animate-spin' /> : <Send />}
+            <Send />
           </Button>
         )}
       </form>

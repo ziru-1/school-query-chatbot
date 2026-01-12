@@ -4,6 +4,23 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { CornerDownRight, Sparkles, User } from 'lucide-react'
 import TextTypewriter from './TextTypewriter'
 
+const LoadingDots = () => (
+  <div className='flex space-x-1'>
+    <div
+      className='h-1.5 w-1.5 animate-bounce rounded-full bg-gray-600'
+      style={{ animationDelay: '0ms' }}
+    ></div>
+    <div
+      className='h-1.5 w-1.5 animate-bounce rounded-full bg-gray-600'
+      style={{ animationDelay: '150ms' }}
+    ></div>
+    <div
+      className='h-1.5 w-1.5 animate-bounce rounded-full bg-gray-600'
+      style={{ animationDelay: '300ms' }}
+    ></div>
+  </div>
+)
+
 const BotMessage = ({
   msg,
   isLastMessage,
@@ -44,14 +61,14 @@ const BotMessage = ({
   )
 }
 
-const ChatMessages = ({ sendMessage, messages, setIsQuerying }) => {
+const ChatMessages = ({ sendMessage, messages, setIsQuerying, isQuerying }) => {
   const messageEndRef = useRef(null)
 
   useEffect(() => {
     requestAnimationFrame(() => {
       messageEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     })
-  }, [messages])
+  }, [messages, isQuerying])
 
   return (
     <div className='flex-1 px-4 pt-4'>
@@ -105,6 +122,23 @@ const ChatMessages = ({ sendMessage, messages, setIsQuerying }) => {
           </div>
         )
       })}
+
+      {/* Loading state - show bot avatar with loading dots */}
+      {isQuerying && (
+        <div className='mb-4 flex justify-start'>
+          <div className='flex gap-2'>
+            <Avatar className='border-background h-10 w-10 border-2 shadow-xl'>
+              <AvatarFallback className='bg-gray-100'>
+                <Sparkles className='h-5 w-5 text-black' />
+              </AvatarFallback>
+            </Avatar>
+
+            <div className='max-w-70 rounded-lg bg-gray-200 px-3 pt-4 shadow-lg md:max-w-md'>
+              <LoadingDots />
+            </div>
+          </div>
+        </div>
+      )}
 
       <div ref={messageEndRef} />
 
