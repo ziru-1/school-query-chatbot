@@ -3,6 +3,7 @@ import { Toaster } from 'sonner'
 import AdminLayout from './components/layout/AdminLayout'
 import ProtectedRoute from './components/layout/ProtectedRoute'
 import PublicLayout from './components/layout/PublicLayout'
+import ChatLogs from './pages/admin/chat-logs/ChatLogs'
 import Dashboard from './pages/admin/dashboard/Dashboard'
 import ManageAdminsPage from './pages/admin/manage-admins/ManageAdminsPage'
 import QAPage from './pages/admin/qa/QAPage'
@@ -32,6 +33,7 @@ const App = () => {
           <Route path='/admin/dashboard' element={<Dashboard />} />
           <Route path='/admin/qa' element={<QAPage />} />
           <Route path='/admin/suggestions' element={<SuggestionsPage />} />
+          <Route path='/admin/chat-logs' element={<ChatLogs />} />
 
           <Route
             path='/admin/manage-admins'

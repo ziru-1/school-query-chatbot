@@ -54,3 +54,11 @@ export const getSuggestionsLogs = async () => {
 
   return formatted
 }
+
+export const getChatLogs = async () => {
+  const { data, error } = await supabase.from('chat_logs').select('*')
+
+  if (error) throw error
+
+  return data
+}

@@ -26,6 +26,7 @@ import {
   ChevronUp,
   FileText,
   Home,
+  Lightbulb,
   LogOut,
   MessageCircle,
   Moon,
@@ -52,6 +53,12 @@ const navItemsCommon = [
   {
     label: 'Suggestions',
     href: '/admin/suggestions',
+    icon: <Lightbulb />,
+    roles: ['admin', 'superadmin'],
+  },
+  {
+    label: 'Chat Logs',
+    href: '/admin/chat-logs',
     icon: <MessageCircle />,
     roles: ['admin', 'superadmin'],
   },
