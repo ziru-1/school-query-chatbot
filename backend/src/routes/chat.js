@@ -17,6 +17,14 @@ router.post('/', async (req, res) => {
 
     const message = cleanText(rawMessage)
 
+    const MAX_CHARS = 200
+
+    if (message.length > MAX_CHARS) {
+      return res.status(400).json({
+        error: 'Message is too long.',
+      })
+    }
+
     // 1. Create embedding using Cohere v2
     const embedding = await embed(message, 'search_query')
 

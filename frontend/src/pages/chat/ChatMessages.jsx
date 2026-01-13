@@ -100,7 +100,7 @@ const ChatMessages = ({ sendMessage, messages, setIsQuerying, isQuerying }) => {
               </Avatar>
 
               <div
-                className={`max-w-70 rounded-lg p-3 shadow-lg md:max-w-md ${
+                className={`max-w-70 rounded-lg p-3 wrap-break-word shadow-lg md:max-w-md ${
                   msg.sender === 'user'
                     ? 'bg-blue-500 text-white'
                     : 'bg-gray-200'

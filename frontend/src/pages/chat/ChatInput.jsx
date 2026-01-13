@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Send, Loader2, Mic, MicOff } from 'lucide-react'
+import { Send, Mic, MicOff } from 'lucide-react'
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
 
 const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
+  const MAX_CHARS = 200
   const [input, setInput] = useState('')
 
   const {
@@ -33,8 +34,12 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
     SpeechRecognition.startListening({ continuous: true })
   }
 
+  const isTooLong = input.length > MAX_CHARS
+  const isSendDisabled = isQuerying || !input.trim() || isTooLong
+
   const handleSend = (e) => {
     e.preventDefault()
+    if (isTooLong || !input.trim()) return
     onSend(input)
     setInput('')
   }
@@ -77,14 +82,16 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
             </Button>
           </span>
         ) : (
-          <Button
-            type='submit'
-            className='cursor-pointer rounded-l-xl rounded-r-3xl pr-0.5'
-            size='icon'
-            disabled={isQuerying || !input.trim()}
-          >
-            <Send />
-          </Button>
+          <span title={isTooLong ? 'Message is too long' : undefined}>
+            <Button
+              type='submit'
+              className='cursor-pointer rounded-l-xl rounded-r-3xl pr-0.5'
+              size='icon'
+              disabled={isSendDisabled}
+            >
+              <Send />
+            </Button>
+          </span>
         )}
       </form>
 
