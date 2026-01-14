@@ -1,16 +1,23 @@
 import { Button } from '@/components/ui/button'
+import { useMeta } from '@/hooks/useMeta'
 import DeleteConfirmationDialog from '@/pages/admin/qa/components/DeleteConfirmationDialog'
 import { FilePlusCorner } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { toast } from 'sonner'
 import DataTable from './components/DataTable'
 import QABulkActions from './components/QABulkActions'
 import QAFormDialog from './components/QAFormDialog'
 import QAViewDialog from './components/QAViewDialog'
 import { useQAData, useQAMutations } from './hooks/useQAData'
 import { createQATableColumns } from './qaTableColumns'
-import { toast } from 'sonner'
 
 const QAPage = () => {
+  useMeta({
+    title: 'QA Pairs | Admin | Vivy AI',
+    description:
+      'Manage all question-answer pairs in the Vivy AI admin portal.',
+  })
+
   const { data = [], isLoading, error } = useQAData()
   const mutations = useQAMutations()
 

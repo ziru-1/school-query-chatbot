@@ -1,3 +1,4 @@
+import { useMeta } from '@/hooks/useMeta'
 import { useEffect } from 'react'
 import CTA from './components/CTA'
 import FAQ from './components/FAQ'
@@ -9,6 +10,12 @@ import Navbar from './components/Navbar'
 import Testimonials from './components/Testimonials'
 
 const LandingPage = () => {
+  useMeta({
+    title: 'Vivy AI',
+    description:
+      'Ask school-related questions instantly with Vivy AI. Get accurate, admin-verified answers about admissions, policies, schedules, and more.',
+  })
+
   useEffect(() => {
     // Override the html overflow: hidden for landing page only
     document.documentElement.style.overflow = 'auto'

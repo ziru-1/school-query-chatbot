@@ -1,8 +1,14 @@
-import React from 'react'
-import Navbar from './Navbar'
+import { useMeta } from '@/hooks/useMeta'
 import LoginForm from './LoginForm'
+import Navbar from './Navbar'
 
 const LoginPage = () => {
+  useMeta({
+    title: 'Login | Vivy AI',
+    description:
+      'Login to the Vivy AI admin portal to manage Q&A, user suggestions, and chat logs.',
+  })
+
   return (
     <div className='flex min-h-screen flex-col'>
       <Navbar />

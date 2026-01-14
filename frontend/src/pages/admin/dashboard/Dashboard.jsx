@@ -1,3 +1,4 @@
+import { useMeta } from '@/hooks/useMeta'
 import ChartsRow from './components/ChartsRow'
 import DashboardError from './components/DashboardError'
 import DashboardLoading from './components/DashboardLoading'
@@ -7,6 +8,12 @@ import RecentsTables from './components/RecentsTables'
 import { useDashboardData } from './hooks/useDashboardData'
 
 const Dashboard = () => {
+  useMeta({
+    title: 'Dashboard | Admin | Vivy AI',
+    description:
+      'Overview of Vivy AI admin metrics and statistics for quick insights.',
+  })
+
   const { data, isLoading, error } = useDashboardData()
 
   if (isLoading) return <DashboardLoading />

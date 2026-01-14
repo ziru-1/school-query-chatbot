@@ -1,14 +1,21 @@
+import { useMeta } from '@/hooks/useMeta'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import DataTable from './components/DataTable'
 import SuggestionViewDialog from './components/SuggestionViewDialog'
 import {
-  useSuggestionsData,
   useSuggestionMutations,
+  useSuggestionsData,
 } from './hooks/useSuggestionsData'
 import { createSuggestionsTableColumns } from './suggestionsTableColumns'
 
 const SuggestionsPage = () => {
+  useMeta({
+    title: 'Suggestions | Admin | Vivy AI',
+    description:
+      'Review and manage user-submitted suggestions in the Vivy AI admin portal.',
+  })
+
   const { data = [], isLoading, error } = useSuggestionsData()
   const mutations = useSuggestionMutations()
 

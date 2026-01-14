@@ -1,8 +1,14 @@
-import React from 'react'
+import { useMeta } from '@/hooks/useMeta'
 import { AlertCircle } from 'lucide-react'
 import { Link } from 'react-router'
 
 const NotFound = () => {
+  useMeta({
+    title: '404 Page Not Found',
+    description:
+      'Oops! The page you are looking for does not exist. Return to Home or Chat.',
+  })
+
   return (
     <div className='bg-background flex min-h-screen w-full items-center justify-center'>
       <div className='shadow-foreground/10 mx-4 mb-20 w-full max-w-md rounded-2xl shadow-lg'>

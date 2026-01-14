@@ -1,17 +1,24 @@
 import { Button } from '@/components/ui/button'
+import { useMeta } from '@/hooks/useMeta'
 import DeleteConfirmationDialog from '@/pages/admin/qa/components/DeleteConfirmationDialog'
 import { UserPlus } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
-import DataTable from './components/DataTable'
+import { createAdminsTableColumns } from './adminsTableColumns'
 import AdminAddDialog from './components/AdminAddDialog'
 import AdminEditDialog from './components/AdminEditDialog'
-import ResetPasswordDialog from './components/ResetPasswordDialog'
 import AdminViewDialog from './components/AdminViewDialog'
+import DataTable from './components/DataTable'
+import ResetPasswordDialog from './components/ResetPasswordDialog'
 import { useAdminsData, useAdminsMutations } from './hooks/useAdminsData'
-import { createAdminsTableColumns } from './adminsTableColumns'
 
 const ManageAdminsPage = () => {
+  useMeta({
+    title: 'Manage Admins | Admin | Vivy AI',
+    description:
+      'Add, edit, and remove admin users in the Vivy AI admin portal.',
+  })
+
   const { data = [], isLoading, error } = useAdminsData()
   const mutations = useAdminsMutations()
 
