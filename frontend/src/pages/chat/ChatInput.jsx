@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Send, Mic, MicOff } from 'lucide-react'
+import { Mic, MicOff, Send } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
+import { toast } from 'sonner'
 
 const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
   const MAX_CHARS = 200
@@ -25,13 +26,30 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
     }
   }, [transcript])
 
-  const toggleListening = (e) => {
+  const toggleListening = async (e) => {
     e.preventDefault()
-    if (listening) {
-      SpeechRecognition.stopListening()
+
+    try {
+      if (listening) {
+        SpeechRecognition.stopListening()
+        return
+      }
+
+      await navigator.mediaDevices.getUserMedia({ audio: true })
+
+      resetTranscript()
+      await SpeechRecognition.startListening({ continuous: true })
+    } catch (error) {
+      if (error.name === 'NotAllowedError') {
+        toast.error(
+          'Microphone access denied. Please allow microphone access in your browser settings.',
+        )
+      } else if (error.name === 'NotFoundError') {
+        toast.error('No microphone found')
+      } else {
+        toast.error('Could not access microphone')
+      }
     }
-    resetTranscript()
-    SpeechRecognition.startListening({ continuous: true })
   }
 
   const isTooLong = input.length > MAX_CHARS
