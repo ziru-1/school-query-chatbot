@@ -1,6 +1,5 @@
 import React from 'react'
-import Navbar from '../chat/Navbar'
-
+import Navbar from './Navbar'
 import LoginForm from './LoginForm'
 
 const LoginPage = () => {
