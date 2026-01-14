@@ -133,7 +133,7 @@ const HowItWorks = () => {
                     <div className='border-background flex h-10 w-10 items-center justify-center rounded-full border-2 bg-blue-500 shadow-xl'>
                       <User className='h-5 w-5 text-white' />
                     </div>
-                    <div className='max-w-2xs rounded-lg bg-blue-500 p-3 text-sm text-white shadow-lg'>
+                    <div className='max-w-50 rounded-lg bg-blue-500 p-3 text-sm text-white shadow-lg md:max-w-md lg:max-w-2xs'>
                       What is the school's vision?
                     </div>
                   </div>
@@ -151,7 +151,7 @@ const HowItWorks = () => {
                     <div className='border-background flex h-10 w-10 items-center justify-center rounded-full border-2 bg-gray-100 shadow-xl'>
                       <Sparkles className='h-5 w-5 text-black' />
                     </div>
-                    <div className='max-w-2xs rounded-lg bg-gray-200 p-3 text-sm text-black shadow-lg'>
+                    <div className='max-w-50 rounded-lg bg-gray-200 p-3 text-sm text-black shadow-lg md:max-w-md lg:max-w-2xs'>
                       <p className='mb-2'>
                         The school's vision is to produce globally competent
                         professionals, internationally recognized in
