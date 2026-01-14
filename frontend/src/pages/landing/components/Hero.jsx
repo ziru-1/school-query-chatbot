@@ -77,7 +77,7 @@ const Hero = () => {
             {/* Replace with your actual hero image */}
             <img
               src='/path-to-your-hero-image.png'
-              alt='Student using Vivy AI a school-related question'
+              alt='Student asking Vivy AI a school-related question'
               className='h-full w-full object-cover'
             />
           </div>
