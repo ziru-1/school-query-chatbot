@@ -11,6 +11,7 @@ import SuggestionsPage from './pages/admin/suggestions/SuggestionsPage'
 import ChatPage from './pages/chat/ChatPage'
 import LoginPage from './pages/login/LoginPage'
 import NotFound from './pages/NotFound'
+import LandingPage from './pages/landing/LandingPage'
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         richColors
       />
       <Routes>
+        <Route index element={<LandingPage />} />
         <Route path='/chat' element={<ChatPage />} />
 
         <Route element={<PublicLayout />}>
