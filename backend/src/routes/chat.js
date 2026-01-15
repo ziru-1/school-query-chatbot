@@ -46,10 +46,15 @@ router.post('/', async (req, res) => {
       confidence = match.score
       question = match.metadata?.question || null
       answer = match.metadata?.answer || null
+    } else {
+      return res.status(404).json({
+        error: 'Knowledge base is currently empty. Please try again later.',
+      })
     }
 
     const highThreshold = 0.55 // Direct answer threshold
-    const lowThreshold = 0.35 // Suggestion threshold
+    const mediumThreshold = 0.35 // "Did you mean" threshold
+    const lowThreshold = 0.25 //Related questions threshold
 
     let finalAnswer
     let suggestions = []
@@ -78,7 +83,7 @@ Answer to rewrite: "${answer}"
       })
 
       finalAnswer = gen.text
-    } else if (confidence >= lowThreshold && confidence < highThreshold) {
+    } else if (confidence >= mediumThreshold && confidence < highThreshold) {
       // Medium confidence: Suggest the closest match
       finalAnswer = "I'm not entirely sure about that. Did you mean:"
       suggestions = [question]
