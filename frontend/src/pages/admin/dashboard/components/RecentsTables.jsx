@@ -82,7 +82,9 @@ const RecentsTables = ({ recentSuggestions, recentQAActivity }) => {
                       <ActionBadge action={activity.action_type} />
                     </TableCell>
                     <TableCell className='max-w-[150px] truncate'>
-                      {activity.new_question || '-'}
+                      {activity.action_type === 'delete'
+                        ? activity.old_question || '-'
+                        : activity.new_question || '-'}
                     </TableCell>
                     <TableCell className='text-right text-sm'>
                       {activity.admin_name}
