@@ -1,3 +1,4 @@
+import { APP_NAME } from '@/config/appConfig'
 import { useMeta } from '@/hooks/useMeta'
 import { useMemo, useState } from 'react'
 import { createChatLogsTableColumns } from './chatLogsTableColumns'
@@ -10,9 +11,8 @@ const LOW_THRESHOLD = 0.35
 
 const ChatLogsPage = () => {
   useMeta({
-    title: 'Chat Logs | Admin | Vivy AI',
-    description:
-      'View and manage all user chat logs in the Vivy AI admin portal.',
+    title: `Chat Logs | Admin | ${APP_NAME}`,
+    description: `View and manage all user chat logs in the ${APP_NAME} admin portal.`,
   })
 
   const { data = [], isLoading, error } = useChatLogs()

@@ -20,6 +20,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
+import { APP_NAME } from '@/config/appConfig'
 import { useAuthStore } from '@/stores/authStore'
 import { useThemeStore } from '@/stores/themeStore'
 import {
@@ -99,7 +100,7 @@ const AdminLayout = () => {
           <SidebarHeader>
             <div className='flex items-center gap-2 px-2 py-2'>
               <Logo />
-              <span className='text-lg font-bold'>Vivy AI</span>
+              <span className='text-lg font-bold'>{APP_NAME}</span>
             </div>
           </SidebarHeader>
 

@@ -1,12 +1,12 @@
+import { APP_NAME } from '@/config/appConfig'
 import { useMeta } from '@/hooks/useMeta'
 import LoginForm from './LoginForm'
 import Navbar from './Navbar'
 
 const LoginPage = () => {
   useMeta({
-    title: 'Login | Vivy AI',
-    description:
-      'Login to the Vivy AI admin portal to manage Q&A, user suggestions, and chat logs.',
+    title: `Login | ${APP_NAME}`,
+    description: `Login to the ${APP_NAME} admin portal to manage Q&A, user suggestions, and chat logs.`,
   })
 
   return (

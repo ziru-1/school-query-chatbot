@@ -1,12 +1,12 @@
+import { APP_NAME } from '@/config/appConfig'
 import { useMeta } from '@/hooks/useMeta'
 import ChatInterface from './ChatInterface'
 import Navbar from './Navbar'
 
 const ChatPage = () => {
   useMeta({
-    title: 'Chat | Vivy AI',
-    description:
-      'Ask school-related questions instantly with Vivy AI and get accurate, admin-verified answers.',
+    title: `Chat | ${APP_NAME}`,
+    description: `Ask school-related questions instantly with ${APP_NAME} and get accurate, admin-verified answers.`,
   })
 
   return (

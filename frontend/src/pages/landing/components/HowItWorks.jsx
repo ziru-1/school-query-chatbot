@@ -1,3 +1,4 @@
+import { APP_NAME } from '@/config/appConfig'
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion'
 import {
@@ -60,9 +61,10 @@ const HowItWorks = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
               className='text-muted-foreground mb-8 text-lg'
             >
-              Traditional LLMs hallucinate. Vivy AI grounds every answer in your
-              specific school data. We index your content into a vector space,
-              allowing us to retrieve the exact facts needed to answer a query.
+              Traditional LLMs hallucinate. {APP_NAME} grounds every answer in
+              your specific school data. We index your content into a vector
+              space, allowing us to retrieve the exact facts needed to answer a
+              query.
             </motion.p>
 
             <div className='space-y-6'>
@@ -100,7 +102,7 @@ const HowItWorks = () => {
                     Behind the Scenes: RAG Technology
                   </h4>
                   <p className='text-muted-foreground text-sm'>
-                    Vivy AI uses Retrieval-Augmented Generation (RAG) with
+                    {APP_NAME} uses Retrieval-Augmented Generation (RAG) with
                     vector databases to ensure every answer is grounded in
                     verified information.
                   </p>

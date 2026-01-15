@@ -1,3 +1,4 @@
+import { APP_NAME } from '@/config/appConfig'
 import { useMeta } from '@/hooks/useMeta'
 import ChartsRow from './components/ChartsRow'
 import DashboardError from './components/DashboardError'
@@ -9,9 +10,8 @@ import { useDashboardData } from './hooks/useDashboardData'
 
 const Dashboard = () => {
   useMeta({
-    title: 'Dashboard | Admin | Vivy AI',
-    description:
-      'Overview of Vivy AI admin metrics and statistics for quick insights.',
+    title: `Dashboard | Admin | ${APP_NAME}`,
+    description: `Overview of ${APP_NAME} admin metrics and statistics for quick insights.`,
   })
 
   const { data, isLoading, error } = useDashboardData()

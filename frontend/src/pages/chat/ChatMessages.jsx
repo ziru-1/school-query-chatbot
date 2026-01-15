@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { APP_NAME } from '@/config/appConfig'
 import { CornerDownRight, Sparkles, User } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import TextTypewriter from './TextTypewriter'
 
 const LoadingDots = () => (
@@ -144,7 +145,7 @@ const ChatMessages = ({ sendMessage, messages, setIsQuerying, isQuerying }) => {
 
       {messages.length === 0 && (
         <div className='text-foreground absolute top-1/2 right-0 left-0 -translate-y-[13vh] text-center font-mono text-3xl font-bold md:-translate-y-[20vh] md:text-4xl'>
-          Welcome to Vivy AI
+          Welcome to {APP_NAME}
         </div>
       )}
     </div>

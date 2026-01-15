@@ -1,21 +1,22 @@
-import React, { useState } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
-  DialogClose,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import { Lightbulb, Send } from 'lucide-react'
-import { toast } from 'sonner'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { APP_NAME } from '@/config/appConfig'
 import { supabase } from '@/lib/supabase'
+import { Lightbulb, Send } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 const SuggestionModal = () => {
   const [open, setOpen] = useState(false)
@@ -80,7 +81,7 @@ const SuggestionModal = () => {
             <Input
               id='question'
               className='md:text-md text-sm'
-              placeholder='What question should Vivy AI be able to answer?'
+              placeholder={`What question should ${APP_NAME} be able to answer?`}
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               maxLength={questionMaxLength}

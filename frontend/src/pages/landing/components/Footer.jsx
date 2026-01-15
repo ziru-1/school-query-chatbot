@@ -1,5 +1,6 @@
 import Logo from '@/components/ui/Logo'
 import { Link } from 'react-router'
+import { APP_NAME } from '@/config/appConfig'
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion'
 
@@ -17,7 +18,7 @@ const Footer = () => {
           <div>
             <div className='mb-6 flex items-center gap-2'>
               <Logo />
-              <span className='text-lg font-bold'>Vivy AI</span>
+              <span className='text-lg font-bold'>{APP_NAME}</span>
             </div>
             <p className='text-muted-foreground text-sm'>
               AI answers schools can trust.
@@ -65,7 +66,7 @@ const Footer = () => {
           className='border-border flex flex-col items-center gap-4 border-t pt-6 md:flex-row md:justify-between'
         >
           <p className='text-muted-foreground text-sm'>
-            © 2025 Vivy AI. Built for schools.
+            © 2026 {APP_NAME}. Built for schools.
           </p>
 
           <p className='text-muted-foreground text-xs'>

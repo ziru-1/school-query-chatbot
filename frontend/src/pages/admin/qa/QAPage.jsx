@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { APP_NAME } from '@/config/appConfig'
 import { useMeta } from '@/hooks/useMeta'
 import DeleteConfirmationDialog from '@/pages/admin/qa/components/DeleteConfirmationDialog'
 import { FilePlusCorner } from 'lucide-react'
@@ -13,9 +14,8 @@ import { createQATableColumns } from './qaTableColumns'
 
 const QAPage = () => {
   useMeta({
-    title: 'QA Pairs | Admin | Vivy AI',
-    description:
-      'Manage all question-answer pairs in the Vivy AI admin portal.',
+    title: `QA Pairs | Admin | ${APP_NAME}`,
+    description: `Manage all question-answer pairs in the ${APP_NAME} admin portal.`,
   })
 
   const { data = [], isLoading, error } = useQAData()

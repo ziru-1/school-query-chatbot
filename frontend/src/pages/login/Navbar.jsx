@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button'
 import Logo from '@/components/ui/Logo'
+import { APP_NAME } from '@/config/appConfig'
 import { useThemeStore } from '@/stores/themeStore'
-import { Link } from 'react-router'
 import { Moon, Sun } from 'lucide-react'
+import { Link } from 'react-router'
 
 const Navbar = () => {
   const { isDark, toggleDark } = useThemeStore()
@@ -12,7 +13,7 @@ const Navbar = () => {
       <div className='flex max-w-full items-center justify-between'>
         <Link to='/' className='flex items-center gap-2'>
           <Logo />
-          <span className='text-xl font-bold tracking-tight'>Vivy AI</span>
+          <span className='text-xl font-bold tracking-tight'>{APP_NAME}</span>
         </Link>
 
         <Button

@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { APP_NAME } from '@/config/appConfig'
 import { useMeta } from '@/hooks/useMeta'
 import DeleteConfirmationDialog from '@/pages/admin/qa/components/DeleteConfirmationDialog'
 import { UserPlus } from 'lucide-react'
@@ -14,9 +15,8 @@ import { useAdminsData, useAdminsMutations } from './hooks/useAdminsData'
 
 const ManageAdminsPage = () => {
   useMeta({
-    title: 'Manage Admins | Admin | Vivy AI',
-    description:
-      'Add, edit, and remove admin users in the Vivy AI admin portal.',
+    title: `Manage Admins | Admin | ${APP_NAME}`,
+    description: `Add, edit, and remove admin users in the ${APP_NAME} admin portal.`,
   })
 
   const { data = [], isLoading, error } = useAdminsData()

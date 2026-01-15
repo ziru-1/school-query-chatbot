@@ -3,6 +3,7 @@ import Logo from '@/components/ui/Logo'
 import { useThemeStore } from '@/stores/themeStore'
 import { useState } from 'react'
 import { Link } from 'react-router'
+import { APP_NAME } from '@/config/appConfig'
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight, Menu, Moon, Sun, X } from 'lucide-react'
@@ -15,7 +16,7 @@ const Navbar = () => {
       <div className='flex max-w-full items-center justify-between'>
         <Link to='/' className='flex items-center gap-2'>
           <Logo />
-          <span className='text-xl font-bold tracking-tight'>Vivy AI</span>
+          <span className='text-xl font-bold tracking-tight'>{APP_NAME}</span>
         </Link>
 
         {/* Desktop Links */}

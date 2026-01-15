@@ -1,3 +1,4 @@
+import { APP_NAME } from '@/config/appConfig'
 import { useMeta } from '@/hooks/useMeta'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
@@ -11,9 +12,8 @@ import { createSuggestionsTableColumns } from './suggestionsTableColumns'
 
 const SuggestionsPage = () => {
   useMeta({
-    title: 'Suggestions | Admin | Vivy AI',
-    description:
-      'Review and manage user-submitted suggestions in the Vivy AI admin portal.',
+    title: `Suggestions | Admin | ${APP_NAME}`,
+    description: `Review and manage user-submitted suggestions in the ${APP_NAME} admin portal.`,
   })
 
   const { data = [], isLoading, error } = useSuggestionsData()
