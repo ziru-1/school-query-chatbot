@@ -38,7 +38,10 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
       await navigator.mediaDevices.getUserMedia({ audio: true })
 
       resetTranscript()
-      await SpeechRecognition.startListening({ continuous: true })
+      await SpeechRecognition.startListening({
+        continuous: true,
+        language: 'en-US',
+      })
     } catch (error) {
       if (error.name === 'NotAllowedError') {
         toast.error(
