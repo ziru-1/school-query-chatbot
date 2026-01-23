@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
   const MAX_CHARS = 200
   const [input, setInput] = useState('')
+  const [isMobile, setIsMobile] = useState(false)
 
   const {
     transcript,
@@ -18,6 +19,21 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
     browserSupportsSpeechRecognition,
     isMicrophoneAvailable,
   } = useSpeechRecognition()
+
+  // Detect if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent,
+        ) || window.innerWidth < 768
+      setIsMobile(mobile)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     if (transcript) {
@@ -28,6 +44,11 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
 
   const toggleListening = async (e) => {
     e.preventDefault()
+
+    if (!browserSupportsSpeechRecognition) {
+      toast.error('Speech recognition is not supported in this browser')
+      return
+    }
 
     try {
       if (listening) {
@@ -67,12 +88,17 @@ const ChatInput = ({ onSend, messages, isQuerying, inputRef }) => {
 
   const showMicButton = listening || !input.trim()
   const micDisabled =
-    !(browserSupportsSpeechRecognition && isMicrophoneAvailable) || isQuerying
-  const micTitle = !browserSupportsSpeechRecognition
-    ? 'Speech recognition not supported in this browser'
-    : !isMicrophoneAvailable
-      ? 'Microphone access is blocked'
-      : undefined
+    isMobile ||
+    !browserSupportsSpeechRecognition ||
+    !isMicrophoneAvailable ||
+    isQuerying
+  const micTitle = isMobile
+    ? 'Voice input not available on mobile'
+    : !browserSupportsSpeechRecognition
+      ? 'Speech recognition not supported in this browser'
+      : !isMicrophoneAvailable
+        ? 'Microphone access is blocked'
+        : undefined
 
   return (
     <div
