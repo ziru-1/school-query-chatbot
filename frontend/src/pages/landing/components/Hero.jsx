@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
+import studentImage from '/src/assets/student-using-vivy.webp'
 
 const Hero = () => {
   return (
@@ -76,7 +77,7 @@ const Hero = () => {
           <div className='border-border bg-background relative aspect-4/3 overflow-hidden rounded-2xl border shadow-2xl'>
             {/* Replace with your actual hero image */}
             <img
-              src='/path-to-your-hero-image.png'
+              src={studentImage}
               alt='Student asking Vivy AI a school-related question'
               className='h-full w-full object-cover'
             />
