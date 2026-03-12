@@ -79,9 +79,9 @@ const AdminLayout = () => {
   const { isDark, toggleDark } = useThemeStore()
   const navigate = useNavigate()
 
-  if (loading || !user) return null
-
+  if (loading) return null
   if (!session) return <Navigate to='/login' replace />
+  if (!user) return null
 
   const handleSignOut = async () => {
     try {
