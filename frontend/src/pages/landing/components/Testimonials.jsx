@@ -4,19 +4,19 @@ import { motion } from 'framer-motion'
 const Testimonials = () => {
   const testimonials = [
     {
-      name: 'Person 1',
+      name: 'Respondent 1',
       role: 'Incoming Student',
-      text: 'I got all my admission questions answered in minutes! So much easier than calling the office.',
+      text: 'I got all my admission questions answered in minutes! Saves me so much time.',
     },
     {
-      name: 'Person 2',
+      name: 'Respondent 2',
       role: 'Parent',
       text: 'As a parent, I appreciate getting accurate information about school policies instantly.',
     },
     {
-      name: 'Person 3',
+      name: 'Respondent 3',
       role: 'Current Student',
-      text: 'Perfect for checking class schedules and deadlines. Saves me so much time!',
+      text: 'Getting school information is now faster without visiting offices or messaging staff.',
     },
   ]
 
