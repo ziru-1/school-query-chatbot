@@ -35,9 +35,7 @@ const LoginForm = () => {
       <div className='flex justify-center'>
         <Logo />
       </div>
-      <h1 className='text-center text-2xl font-medium'>
-        Log in to your account
-      </h1>
+      <h1 className='text-center text-2xl font-medium'>Admin Login</h1>
       <p className='text-muted-foreground mb-5 text-center'>
         Welcome back! Please enter your details
       </p>
