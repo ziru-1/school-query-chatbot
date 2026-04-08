@@ -16,8 +16,10 @@ const ChatLogsPage = () => {
   const { data = [], isLoading, error } = useChatLogs()
   const { data: settings } = useChatbotSettings()
 
-  const highThreshold = settings?.high_threshold ?? 0.55
-  const lowThreshold = settings?.medium_threshold ?? 0.35
+  console.log(settings)
+
+  const highThreshold = settings?.high_threshold.value ?? 0.55
+  const lowThreshold = settings?.medium_threshold.value ?? 0.35
 
   const [viewDialog, setViewDialog] = useState({ open: false, item: null })
   const [confidenceFilter, setConfidenceFilter] = useState('all')

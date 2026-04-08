@@ -1,20 +1,33 @@
-import { supabase } from '@/lib/supabase'
-import { useQuery } from '@tanstack/react-query'
+import {
+  fetchChatbotSettings,
+  updateChatbotSetting,
+} from '@/services/chatbot-settings'
+import { useAuthStore } from '@/stores/authStore'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-const fetchChatbotSettings = async () => {
-  const { data, error } = await supabase
-    .from('chatbot_settings')
-    .select('key, value')
-
-  if (error)
-    throw new Error(error.message || 'Unable to fetch chatbot settings')
-
-  return Object.fromEntries(data.map((s) => [s.key, s.value]))
-}
+export const CHATBOT_SETTINGS_QUERY_KEY = ['chatbot-settings']
 
 export const useChatbotSettings = () => {
   return useQuery({
-    queryKey: ['chatbot-settings'],
+    queryKey: CHATBOT_SETTINGS_QUERY_KEY,
     queryFn: fetchChatbotSettings,
+    staleTime: 5 * 60 * 1000,
   })
+}
+
+export const useChatbotSettingsMutations = () => {
+  const queryClient = useQueryClient()
+  const { user } = useAuthStore()
+
+  const updateMutation = useMutation({
+    mutationFn: (payload) =>
+      updateChatbotSetting({ ...payload, changedBy: user.auth_user_id }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: CHATBOT_SETTINGS_QUERY_KEY }),
+  })
+
+  return {
+    update: updateMutation.mutateAsync,
+    isUpdating: updateMutation.isPending,
+  }
 }
