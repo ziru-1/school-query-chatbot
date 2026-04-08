@@ -25,10 +25,23 @@ router.post('/', async (req, res) => {
       })
     }
 
-    // 1. Create embedding using Cohere v2
+    // 1. Fetch thresholds from Supabase
+    const { data: settings, error: settingsError } = await supabase
+      .from('chatbot_settings')
+      .select('key, value')
+
+    if (settingsError) throw new Error('Failed to load chatbot settings')
+
+    const thresholds = Object.fromEntries(settings.map((s) => [s.key, s.value]))
+
+    const highThreshold = thresholds.high_threshold
+    const mediumThreshold = thresholds.medium_threshold ?? 0.35
+    const lowThreshold = thresholds.low_threshold ?? 0.25
+
+    // 2. Create embedding using Cohere v2
     const embedding = await embed(message, 'search_query')
 
-    // 2. Query Pinecone with more results for better matching
+    // 3. Query Pinecone with more results for better matching
     const queryRes = await pineconeIndex.query({
       vector: embedding,
       topK: 5,
@@ -51,10 +64,6 @@ router.post('/', async (req, res) => {
         error: 'Knowledge base is currently empty. Please try again later.',
       })
     }
-
-    const highThreshold = 0.55 // Direct answer threshold
-    const mediumThreshold = 0.35 // "Did you mean" threshold
-    const lowThreshold = 0.25 //Related questions threshold
 
     let finalAnswer
     let suggestions = []
@@ -118,7 +127,7 @@ Answer to rewrite: "${answer}"
     res.json({
       answer: finalAnswer,
       suggestions: suggestions.length > 0 ? suggestions : undefined,
-      confidence, // Optional: for debugging
+      confidence,
     })
   } catch (err) {
     console.error(err)
