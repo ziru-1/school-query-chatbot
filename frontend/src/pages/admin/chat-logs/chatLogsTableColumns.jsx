@@ -9,7 +9,12 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react'
 
-export const createChatLogsTableColumns = ({ sortConfig, onSort }) => [
+export const createChatLogsTableColumns = ({
+  sortConfig,
+  onSort,
+  highThreshold = 0.6,
+  lowThreshold = 0.35,
+}) => [
   {
     accessorKey: 'id',
     header: 'ID',
@@ -76,7 +81,11 @@ export const createChatLogsTableColumns = ({ sortConfig, onSort }) => [
       const confidence = row.getValue('confidence')
       return (
         <div className='flex justify-center'>
-          <ConfidenceBadge confidence={confidence} />
+          <ConfidenceBadge
+            confidence={confidence}
+            highThreshold={highThreshold}
+            lowThreshold={lowThreshold}
+          />
         </div>
       )
     },

@@ -5,9 +5,7 @@ import { createChatLogsTableColumns } from './chatLogsTableColumns'
 import ChatLogViewDialog from './components/ChatLogViewDialog'
 import ChatLogsDataTable from './components/ChatLogsDataTable'
 import { useChatLogs } from './hooks/useChatLogs'
-
-const HIGH_THRESHOLD = 0.55
-const LOW_THRESHOLD = 0.35
+import { useChatbotSettings } from '../chatbot-settings/hooks/useChatbotSettings'
 
 const ChatLogsPage = () => {
   useMeta({
@@ -16,6 +14,10 @@ const ChatLogsPage = () => {
   })
 
   const { data = [], isLoading, error } = useChatLogs()
+  const { data: settings } = useChatbotSettings()
+
+  const highThreshold = settings?.high_threshold ?? 0.55
+  const lowThreshold = settings?.medium_threshold ?? 0.35
 
   const [viewDialog, setViewDialog] = useState({ open: false, item: null })
   const [confidenceFilter, setConfidenceFilter] = useState('all')
@@ -33,16 +35,16 @@ const ChatLogsPage = () => {
       const confidence = item.confidence
 
       if (confidenceFilter === 'high') {
-        return confidence >= HIGH_THRESHOLD
+        return confidence >= highThreshold
       } else if (confidenceFilter === 'medium') {
-        return confidence >= LOW_THRESHOLD && confidence < HIGH_THRESHOLD
+        return confidence >= lowThreshold && confidence < highThreshold
       } else if (confidenceFilter === 'low') {
-        return confidence < LOW_THRESHOLD
+        return confidence < lowThreshold
       }
 
       return true
     })
-  }, [data, confidenceFilter])
+  }, [data, confidenceFilter, highThreshold, lowThreshold])
 
   // Sort filtered data
   const sortedData = useMemo(() => {
@@ -84,6 +86,8 @@ const ChatLogsPage = () => {
   const columns = createChatLogsTableColumns({
     sortConfig,
     onSort: handleSort,
+    highThreshold,
+    lowThreshold,
   })
 
   return (
@@ -107,6 +111,8 @@ const ChatLogsPage = () => {
         onRowClick={handleRowClick}
         confidenceFilter={confidenceFilter}
         onConfidenceFilterChange={setConfidenceFilter}
+        highThreshold={highThreshold}
+        lowThreshold={lowThreshold}
       />
 
       <ChatLogViewDialog

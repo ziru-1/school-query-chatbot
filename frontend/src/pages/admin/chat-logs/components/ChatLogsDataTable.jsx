@@ -56,6 +56,8 @@ const ChatLogsDataTable = ({
   onRowClick,
   confidenceFilter,
   onConfidenceFilterChange,
+  highThreshold = 0.6,
+  lowThreshold = 0.35,
 }) => {
   const [globalFilter, setGlobalFilter] = useState('')
   const [columnVisibility, setColumnVisibility] = useState(
@@ -128,21 +130,22 @@ const ChatLogsDataTable = ({
                 <SelectItem value='high'>
                   <div className='flex w-full justify-center'>
                     <span className='inline-flex rounded-full bg-green-300 px-2 py-1 text-xs font-semibold text-green-800 dark:bg-green-900 dark:text-green-200'>
-                      55% - 100%
+                      {Math.round(highThreshold * 100)}% - 100%
                     </span>
                   </div>
                 </SelectItem>
                 <SelectItem value='medium'>
                   <div className='flex w-full justify-center'>
                     <span className='inline-flex rounded-full bg-yellow-300 px-2 py-1 text-xs font-semibold text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'>
-                      35% - 55%
+                      {Math.round(lowThreshold * 100)}% -{' '}
+                      {Math.round(highThreshold * 100)}%
                     </span>
                   </div>
                 </SelectItem>
                 <SelectItem value='low'>
                   <div className='flex w-full justify-center'>
                     <span className='inline-flex rounded-full bg-red-300 px-2 py-1 text-xs font-semibold text-red-800 dark:bg-red-900 dark:text-red-200'>
-                      0% - 35%
+                      0% - {Math.round(lowThreshold * 100)}%
                     </span>
                   </div>
                 </SelectItem>
