@@ -4,14 +4,15 @@ import AdminLayout from './components/layout/AdminLayout'
 import ProtectedRoute from './components/layout/ProtectedRoute'
 import PublicLayout from './components/layout/PublicLayout'
 import ChatLogs from './pages/admin/chat-logs/ChatLogs'
+import ChatbotSettingsPage from './pages/admin/chatbot-settings/ChatbotSettingsPage'
 import Dashboard from './pages/admin/dashboard/Dashboard'
 import ManageAdminsPage from './pages/admin/manage-admins/ManageAdminsPage'
 import QAPage from './pages/admin/qa/QAPage'
 import SuggestionsPage from './pages/admin/suggestions/SuggestionsPage'
 import ChatPage from './pages/chat/ChatPage'
+import LandingPage from './pages/landing/LandingPage'
 import LoginPage from './pages/login/LoginPage'
 import NotFound from './pages/NotFound'
-import LandingPage from './pages/landing/LandingPage'
 
 const App = () => {
   return (
@@ -36,6 +37,10 @@ const App = () => {
           <Route path='/admin/qa' element={<QAPage />} />
           <Route path='/admin/suggestions' element={<SuggestionsPage />} />
           <Route path='/admin/chat-logs' element={<ChatLogs />} />
+          <Route
+            path='/admin/chatbot-settings'
+            element={<ChatbotSettingsPage />}
+          />
 
           <Route
             path='/admin/manage-admins'

@@ -34,6 +34,7 @@ import {
   Sun,
   User2,
   UserCog,
+  Settings,
 } from 'lucide-react'
 import { Link, Navigate, Outlet, useNavigate } from 'react-router'
 import { toast } from 'sonner'
@@ -61,6 +62,12 @@ const navItemsCommon = [
     label: 'Chat Logs',
     href: '/admin/chat-logs',
     icon: <MessageCircle />,
+    roles: ['admin', 'superadmin'],
+  },
+  {
+    label: 'Chatbot Settings',
+    href: '/admin/chatbot-settings',
+    icon: <Settings />,
     roles: ['admin', 'superadmin'],
   },
 ]
