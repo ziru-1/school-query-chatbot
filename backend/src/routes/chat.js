@@ -69,26 +69,25 @@ router.post('/', async (req, res) => {
     let suggestions = []
 
     if (confidence >= highThreshold && answer) {
-      // High confidence: Return rewritten answer
       const gen = await cohere.chat({
         message: `
-You are a strict text-rewriter.
+You are a helpful school information assistant.
 
-Context (DO NOT add to or change this):
-Question: "${question}"
+You are given a user question and a reference context retrieved from a knowledge base. Use the context to answer the user's question naturally and concisely.
 
-Your task is to rewrite ONLY the answer text. You may use the question ONLY to understand meaning, not to add or infer new information.
+User Question: "${message}"
+
+Reference Context:
+Q: "${question}"
+A: "${answer}"
 
 Rules:
-1. Rewrite the answer so it reads smoothly and naturally.
-2. You may ONLY rearrange, reword, simplify, or normalize capitalization and punctuation.
-3. You may NOT add any new information, details, or wording not present in the original answer.
-4. Do NOT add friendliness, explanations, or commentary.
-5. Output ONLY the rewritten answer text. No quotes, no markdown, no extra sentences.
-6. If rewriting requires adding information, return the answer unchanged.
-
-Answer to rewrite: "${answer}"
-        `,
+1. If the reference context is relevant to the user's question, use it to form a clear and natural response.
+2. If the reference context does NOT actually address the user's question, respond with: "I'm sorry, I don't have information about that."
+3. Do NOT make up or infer information beyond what is in the reference context.
+4. Do NOT mention that you are using a reference or context.
+5. Output ONLY the response. No quotes, no markdown, no extra commentary.
+    `,
       })
 
       finalAnswer = gen.text
