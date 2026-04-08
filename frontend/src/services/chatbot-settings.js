@@ -11,27 +11,11 @@ export const fetchChatbotSettings = async () => {
   return Object.fromEntries(data.map((s) => [s.key, s]))
 }
 
-export const updateChatbotSetting = async ({
-  key,
-  oldValue,
-  newValue,
-  changedBy,
-}) => {
-  const { error: updateError } = await supabase
+export const updateChatbotSetting = async ({ key, oldValue, newValue }) => {
+  const { error } = await supabase
     .from('chatbot_settings')
     .update({ value: newValue })
     .eq('key', key)
 
-  if (updateError) throw new Error(updateError.message)
-
-  const { error: logError } = await supabase
-    .from('chatbot_settings_logs')
-    .insert({
-      setting_key: key,
-      old_value: oldValue,
-      new_value: newValue,
-      changed_by: changedBy,
-    })
-
-  if (logError) throw new Error(logError.message)
+  if (error) throw new Error(error.message)
 }
