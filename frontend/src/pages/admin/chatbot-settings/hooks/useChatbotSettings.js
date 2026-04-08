@@ -4,6 +4,7 @@ import {
 } from '@/services/chatbot-settings'
 import { useAuthStore } from '@/stores/authStore'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { CHATBOT_SETTINGS_LOGS_QUERY_KEY } from './useChatbotSettingsLogs'
 
 export const CHATBOT_SETTINGS_QUERY_KEY = ['chatbot-settings']
 
@@ -22,8 +23,12 @@ export const useChatbotSettingsMutations = () => {
   const updateMutation = useMutation({
     mutationFn: (payload) =>
       updateChatbotSetting({ ...payload, changedBy: user.auth_user_id }),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: CHATBOT_SETTINGS_QUERY_KEY }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: CHATBOT_SETTINGS_QUERY_KEY })
+      queryClient.invalidateQueries({
+        queryKey: CHATBOT_SETTINGS_LOGS_QUERY_KEY,
+      })
+    },
   })
 
   return {

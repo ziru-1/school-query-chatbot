@@ -62,3 +62,28 @@ export const getChatLogs = async () => {
 
   return data
 }
+
+export const fetchChatbotSettingsLogs = async () => {
+  const { data, error } = await supabase.from('chatbot_settings_logs').select(`
+      id,
+      setting_key,
+      old_value,
+      new_value,
+      changed_at,
+      changed_by,
+      admin_users!changed_by (
+        first_name,
+        last_name
+      )
+    `)
+
+  if (error)
+    throw new Error(error.message || 'Unable to fetch chatbot settings logs')
+
+  return data.map((log) => ({
+    ...log,
+    actor_name: log.admin_users
+      ? `${log.admin_users.first_name} ${log.admin_users.last_name}`
+      : 'Unknown',
+  }))
+}

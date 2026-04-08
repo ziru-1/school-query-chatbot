@@ -9,10 +9,14 @@ import {
   useChatbotSettings,
   useChatbotSettingsMutations,
 } from './hooks/useChatbotSettings'
+import { Activity } from 'lucide-react'
+import ChatbotSettingsLogsDialog from './components/ChatbotSettingsLogsDialog'
 
 const SETTING_KEYS = ['high_threshold', 'medium_threshold', 'low_threshold']
 
 const ChatbotSettingsPage = () => {
+  const [logsDialogOpen, setLogsDialogOpen] = useState(false)
+
   useMeta({
     title: `Chatbot Settings | Admin | ${APP_NAME}`,
     description: `Manage chatbot confidence thresholds in the ${APP_NAME} admin portal.`,
@@ -82,11 +86,17 @@ const ChatbotSettingsPage = () => {
 
   return (
     <div className='min-w-full space-y-6 p-6'>
-      <div>
-        <h2 className='text-3xl font-bold'>Chatbot Settings</h2>
-        <p className='text-muted-foreground'>
-          Adjust confidence thresholds for chatbot responses.
-        </p>
+      <div className='flex flex-wrap items-end justify-between gap-2'>
+        <div>
+          <h2 className='text-3xl font-bold'>Chatbot Settings</h2>
+          <p className='text-muted-foreground'>
+            Adjust confidence thresholds for chatbot responses.
+          </p>
+        </div>
+        <Button variant='outline' onClick={() => setLogsDialogOpen(true)}>
+          <Activity />
+          Logs
+        </Button>
       </div>
 
       <div className='rounded-md border'>
@@ -155,6 +165,13 @@ const ChatbotSettingsPage = () => {
             })}
           </tbody>
         </table>
+
+        <ChatbotSettingsLogsDialog
+          open={logsDialogOpen}
+          onOpenChange={setLogsDialogOpen}
+          highThreshold={highThreshold}
+          lowThreshold={lowThreshold}
+        />
       </div>
     </div>
   )
