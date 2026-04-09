@@ -7,6 +7,7 @@ import LowConfidenceTable from './components/LowConfidenceTable'
 import MetricsCards from './components/MetricsCards'
 import RecentsTables from './components/RecentsTables'
 import { useDashboardData } from './hooks/useDashboardData'
+import FAQWidget from './components/FAQWidget'
 
 const Dashboard = () => {
   useMeta({
@@ -24,6 +25,7 @@ const Dashboard = () => {
   const recentQAActivity = data?.recentQAActivity || []
   const lowConfidenceQueries = data?.lowConfidenceQueries || []
   const chatActivity = data?.chatActivity || []
+  const frequentlyAskedQuestions = data?.frequentlyAskedQuestions || []
 
   return (
     <div className='space-y-6 p-6'>
@@ -41,6 +43,8 @@ const Dashboard = () => {
         suggestionDistribution={metrics.suggestionDistribution}
         chatActivity={chatActivity}
       />
+
+      <FAQWidget frequentlyAskedQuestions={frequentlyAskedQuestions} />
 
       <RecentsTables
         recentSuggestions={recentSuggestions}
