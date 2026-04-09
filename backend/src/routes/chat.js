@@ -83,14 +83,19 @@ A: "${answer}"
 
 Rules:
 1. If the reference context is relevant to the user's question, use it to form a clear and natural response.
-2. If the reference context does NOT actually address the user's question, respond with: "I'm sorry, I don't have information about that."
+2. If the reference context does NOT actually address the user's question, respond with exactly: "I don't know."
 3. Do NOT make up or infer information beyond what is in the reference context.
 4. Do NOT mention that you are using a reference or context.
 5. Output ONLY the response. No quotes, no markdown, no extra commentary.
     `,
       })
 
-      finalAnswer = gen.text
+      if (gen.text.trim() === "I don't know.") {
+        finalAnswer = "I'm not entirely sure about that. Did you mean:"
+        suggestions = [question]
+      } else {
+        finalAnswer = gen.text
+      }
     } else if (confidence >= mediumThreshold && confidence < highThreshold) {
       // Medium confidence: Suggest the closest match
       finalAnswer = "I'm not entirely sure about that. Did you mean:"
