@@ -1,5 +1,7 @@
 import { APP_NAME } from '@/config/appConfig'
 import { useMeta } from '@/hooks/useMeta'
+import QAFormDialog from '@/pages/admin/qa/components/QAFormDialog'
+import { useQAMutations } from '@/pages/admin/qa/hooks/useQAData'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import DataTable from './components/DataTable'
@@ -18,53 +20,63 @@ const SuggestionsPage = () => {
 
   const { data = [], isLoading, error } = useSuggestionsData()
   const mutations = useSuggestionMutations()
+  const qaMutations = useQAMutations()
 
   const [viewDialog, setViewDialog] = useState({ open: false, item: null })
+  const [qaDialog, setQaDialog] = useState({ open: false, suggestion: null })
   const [statusFilter, setStatusFilter] = useState('all')
-
   const [sortConfig, setSortConfig] = useState({
     field: 'created_at',
     order: 'desc',
   })
 
-  // Filter by status
   const filteredData = useMemo(() => {
     if (statusFilter === 'all') return data
     return data.filter((item) => item.status === statusFilter)
   }, [data, statusFilter])
 
-  // Sort filtered data
   const sortedData = useMemo(() => {
     if (!filteredData.length) return filteredData
-
     return [...filteredData].sort((a, b) => {
       const aValue = new Date(a[sortConfig.field]).getTime()
       const bValue = new Date(b[sortConfig.field]).getTime()
-
-      if (sortConfig.order === 'desc') {
-        return bValue - aValue
-      } else {
-        return aValue - bValue
-      }
+      return sortConfig.order === 'desc' ? bValue - aValue : aValue - bValue
     })
   }, [filteredData, sortConfig])
 
-  const handleSort = (field, order) => {
-    setSortConfig({ field, order })
-  }
+  const handleSort = (field, order) => setSortConfig({ field, order })
 
   const handleRowClick = (item) => {
-    // Prevent row click when updating
     if (mutations.updatingId === item.id) return
     setViewDialog({ open: true, item })
   }
 
   const handleStatusChange = async (id, newStatus) => {
+    if (newStatus === 'accepted') {
+      const suggestion = data.find((item) => item.id === id)
+      setQaDialog({ open: true, suggestion })
+      return
+    }
+
     try {
       await mutations.update({ suggestionId: id, newStatus })
       toast.success(`Suggestion ${newStatus}`)
     } catch (error) {
       toast.error(`Failed to update status: ${error.message || error}`)
+    }
+  }
+
+  const handleQASubmit = async ({ question, answer }) => {
+    try {
+      await qaMutations.create({ question, answer })
+      await mutations.update({
+        suggestionId: qaDialog.suggestion.id,
+        newStatus: 'accepted',
+      })
+      toast.success('QA pair created and suggestion accepted')
+      setQaDialog({ open: false, suggestion: null })
+    } catch (error) {
+      toast.error(error.message || 'Failed to create QA pair')
     }
   }
 
@@ -102,6 +114,19 @@ const SuggestionsPage = () => {
         open={viewDialog.open}
         onOpenChange={(open) => setViewDialog({ open, item: null })}
         suggestion={viewDialog.item}
+      />
+
+      <QAFormDialog
+        open={qaDialog.open}
+        onOpenChange={(open) => setQaDialog({ open, suggestion: null })}
+        onSubmit={handleQASubmit}
+        initialData={
+          qaDialog.suggestion
+            ? { question: qaDialog.suggestion.question, answer: '' }
+            : null
+        }
+        isSubmitting={qaMutations.isCreating}
+        forceAdd
       />
     </div>
   )

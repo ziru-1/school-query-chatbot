@@ -17,11 +17,12 @@ const QAFormDialog = ({
   onSubmit,
   initialData = null,
   isSubmitting = false,
+  forceAdd = false,
 }) => {
   const [question, setQuestion] = useState(initialData?.question || '')
   const [answer, setAnswer] = useState(initialData?.answer || '')
 
-  const isEdit = Boolean(initialData)
+  const isEdit = Boolean(initialData) && !forceAdd
 
   useEffect(() => {
     if (open) {
@@ -29,7 +30,7 @@ const QAFormDialog = ({
       setQuestion(initialData?.question || '')
       setAnswer(initialData?.answer || '')
     }
-  }, [open, initialData])
+  }, [open])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
