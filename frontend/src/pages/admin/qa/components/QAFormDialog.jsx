@@ -18,11 +18,21 @@ const QAFormDialog = ({
   initialData = null,
   isSubmitting = false,
   forceAdd = false,
+  existingQAPairs = [], // add this
 }) => {
   const [question, setQuestion] = useState(initialData?.question || '')
   const [answer, setAnswer] = useState(initialData?.answer || '')
 
   const isEdit = Boolean(initialData) && !forceAdd
+
+  // Check if question already exists, ignoring the current item being edited
+  const isDuplicate =
+    question.trim().length > 0 &&
+    existingQAPairs.some(
+      (qa) =>
+        qa.question.toLowerCase().trim() === question.toLowerCase().trim() &&
+        qa.id !== initialData?.id,
+    )
 
   useEffect(() => {
     if (open) {
@@ -87,10 +97,15 @@ const QAFormDialog = ({
                 id='question'
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
-                className='min-h-20'
+                className={`min-h-20 ${isDuplicate ? 'border-yellow-500 focus-visible:ring-yellow-500' : ''}`}
                 autoFocus
                 disabled={isSubmitting}
               />
+              {isDuplicate && (
+                <p className='flex items-center gap-1 text-xs text-yellow-600 dark:text-yellow-400'>
+                  <span>⚠</span>A QA pair with this question already exists.
+                </p>
+              )}
             </div>
 
             <div className='grid gap-2'>
@@ -114,7 +129,10 @@ const QAFormDialog = ({
             >
               Cancel
             </Button>
-            <Button type='submit' disabled={!isValid || isSubmitting}>
+            <Button
+              type='submit'
+              disabled={!isValid || isSubmitting || isDuplicate}
+            >
               {isSubmitting ? (
                 <>
                   <span className='mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent' />

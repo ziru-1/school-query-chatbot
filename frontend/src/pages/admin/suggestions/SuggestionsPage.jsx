@@ -1,7 +1,7 @@
 import { APP_NAME } from '@/config/appConfig'
 import { useMeta } from '@/hooks/useMeta'
 import QAFormDialog from '@/pages/admin/qa/components/QAFormDialog'
-import { useQAMutations } from '@/pages/admin/qa/hooks/useQAData'
+import { useQAData, useQAMutations } from '@/pages/admin/qa/hooks/useQAData'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import DataTable from './components/DataTable'
@@ -19,6 +19,7 @@ const SuggestionsPage = () => {
   })
 
   const { data = [], isLoading, error } = useSuggestionsData()
+  const { data: qaData = [] } = useQAData()
   const mutations = useSuggestionMutations()
   const qaMutations = useQAMutations()
 
@@ -127,6 +128,7 @@ const SuggestionsPage = () => {
         }
         isSubmitting={qaMutations.isCreating}
         forceAdd
+        existingQAPairs={qaData}
       />
     </div>
   )

@@ -140,6 +140,7 @@ const QAPage = () => {
         onSubmit={handleFormSubmit}
         initialData={formDialog.item}
         isSubmitting={mutations.isCreating || mutations.isUpdating}
+        existingQAPairs={data}
       />
 
       <QAViewDialog
