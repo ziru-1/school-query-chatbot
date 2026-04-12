@@ -9,14 +9,18 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-const LowConfidenceTable = ({ lowConfidenceQueries }) => {
+const LowConfidenceTable = ({
+  lowConfidenceQueries,
+  highThreshold = 0.6,
+  lowThreshold = 0.35,
+}) => {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Low Confidence Queries</CardTitle>
         <p className='text-muted-foreground text-sm'>
-          Queries with confidence score below 55% (high threshold) - may need
-          new QA pairs
+          Queries with confidence score below {Math.round(highThreshold * 100)}%
+          (high threshold) - may need new QA pairs
         </p>
       </CardHeader>
       <CardContent>
@@ -40,7 +44,11 @@ const LowConfidenceTable = ({ lowConfidenceQueries }) => {
                     {query.matched_question || '-'}
                   </TableCell>
                   <TableCell className='text-center'>
-                    <ConfidenceBadge confidence={query.confidence} />
+                    <ConfidenceBadge
+                      confidence={query.confidence}
+                      highThreshold={highThreshold}
+                      lowThreshold={lowThreshold}
+                    />
                   </TableCell>
                   <TableCell className='text-right text-sm'>
                     {query.created_at
